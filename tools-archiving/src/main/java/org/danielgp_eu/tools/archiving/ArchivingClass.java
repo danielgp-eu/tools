@@ -1,13 +1,13 @@
 package org.danielgp_eu.tools.archiving;
 
+import org.danielgp_eu.tools.core.BasicStructuresClass;
+import org.danielgp_eu.tools.core.LogExposureClass;
+import org.danielgp_eu.tools.core.ShellingClass;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-
-import org.danielgp_eu.tools.core.BasicStructuresClass;
-import org.danielgp_eu.tools.core.LogExposureClass;
-import org.danielgp_eu.tools.core.ShellingClass;
 
 /**
  * Archiving wrapper
@@ -78,8 +78,14 @@ public final class ArchivingClass {
      */
     public static void exposeArchivedStatistics(final Properties folderProps) {
         if (strArchiveName != null) {
-            final File fileA = new File(strArchiveName);
-            if (fileA.exists() && fileA.isFile()) {
+            final String strFeedback = String.format("Analyzing archive file %s...", strArchiveName);
+            LogExposureClass.LOGGER.info(strFeedback);
+            final File fileA = new File(strArchiveName.replace("\"", ""));
+            if (fileA.exists()
+                    && fileA.isFile()) {
+                final String strFeedback2 = String.format("Archive file %s exists and is identified as a file...",
+                        strArchiveName);
+                LogExposureClass.LOGGER.info(strFeedback2);
                 final long fileArchSize = fileA.length();
                 final Object sizeBytesObj = folderProps.getOrDefault("SIZE_BYTES", "0");
                 final String sizeBytesStr = sizeBytesObj == null ? "0" : sizeBytesObj.toString();
@@ -91,8 +97,10 @@ public final class ArchivingClass {
                     fileOrigSize = 0L;
                 }
                 final float percentage = BasicStructuresClass.computePercentageSafely(fileArchSize, fileOrigSize);
-                final String strFeedback = String.format("Folder %s statistics are %s which was compressed to archive %s having a size of %s bytes (which is %s%% of the original)", strArchivingDir.replace("\"", ""), folderProps, strArchiveName, fileArchSize, percentage);
-                LogExposureClass.LOGGER.info(strFeedback);
+                final String strFeedbackFinal = String.format("Folder %s statistics are %s which was compressed to " +
+                        "archive %s having a size of %s bytes (which is %s%% of the original)",
+                        strArchivingDir.replace("\"", ""), folderProps, strArchiveName, fileArchSize, percentage);
+                LogExposureClass.LOGGER.info(strFeedbackFinal);
             }
         }
     }
@@ -120,7 +128,7 @@ public final class ArchivingClass {
      */
     public static void setArchiveNameWithinDestinationFolder(final String inFolderDest) {
         final Path path = Paths.get(strArchivingDir.replace("\"", ""));
-        setArchiveName(appendSeparatorSuffixToFolder(inFolderDest)
+        setArchiveName(appendSeparatorSuffixToFolder(inFolderDest.replace("\"", ""))
                 + path.getFileName().toString());
     }
 

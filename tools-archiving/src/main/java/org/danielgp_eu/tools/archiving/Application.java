@@ -1,14 +1,10 @@
 package org.danielgp_eu.tools.archiving;
 
-import java.util.Properties;
-
-import org.danielgp_eu.tools.core.BasicStructuresClass;
-import org.danielgp_eu.tools.core.CommonInteractiveClass;
-import org.danielgp_eu.tools.core.FileOperationsClass;
-
-import org.danielgp_eu.tools.core.ProjectClass;
+import org.danielgp_eu.tools.core.*;
 import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
+
+import java.util.Properties;
 
 /**
  * Main Command Line
@@ -107,6 +103,8 @@ class ArchiveFolders implements Runnable {
     public void run() {
         final Properties propFolder = new Properties();
         if (strArchivingExec != null) {
+            final String strFeedback = String.format("Archiving executable has been set as %s", strArchivingExec);
+            LogExposureClass.LOGGER.info(strFeedback);
             ArchivingClass.setArchivingExecutable(strArchivingExec);
         }
         ArchivingClass.setArchivePrefix(strArchivePrefix);
@@ -116,8 +114,12 @@ class ArchiveFolders implements Runnable {
         }
         final String[] inFolders = optFolderNames.getFolderNames();
         for (final String strFolder : inFolders) {
+            final String strFeedback = String.format("Processing folder %s", strFolder);
+            LogExposureClass.LOGGER.info(strFeedback);
             propFolder.clear();
             final Properties folderProps = FileOperationsClass.StatisticsSubClass.getFolderStatisticsRecursive(strFolder, propFolder);
+            final String strFeedback2 = String.format("Initial folder statistics are %s", folderProps);
+            LogExposureClass.LOGGER.info(strFeedback2);
             ArchivingClass.setArchivingDir(strFolder);
             ArchivingClass.setArchiveNameWithinDestinationFolder(optFolderDest.getFolderDestination());
             ArchivingClass.archiveFolderAs7z();
