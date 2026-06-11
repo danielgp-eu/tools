@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="info">
+    <Properties>
+        <Property name="APP_LOG_ROOT">logs</Property>
+        <Property name="FILE_NAME_PREFIX">org_danielgp_eu__tools-</Property>
+        <Property name="FILE_PATTERN_SUFFIX">%d{yyyy-MM-dd-HH}-%i</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} [%-6p] %C{3}.%M(%F:%L) - %m%n</Property>
+    </Properties>
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <!-- File Appenders on need basis -->
+        <RollingFile name="restLog" fileName="${APP_LOG_ROOT}/${FILE_NAME_PREFIX}rest.log"
+            filePattern="${APP_LOG_ROOT}/${FILE_NAME_PREFIX}rest-${FILE_PATTERN_SUFFIX}.log">
+            <LevelRangeFilter minLevel="WARN" maxLevel="ALL" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <!-- Max 50 files will be created every-hour -->
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${APP_LOG_ROOT}" maxDepth="10">
+                    <!-- Delete all files older than 10 days -->
+                    <IfLastModified age="10d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <RollingFile name="errorLog" fileName="${APP_LOG_ROOT}/${FILE_NAME_PREFIX}error.log"
+            filePattern="${APP_LOG_ROOT}/${FILE_NAME_PREFIX}error-${FILE_PATTERN_SUFFIX}.log">
+            <LevelRangeFilter minLevel="FATAL" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <!-- Max 50 files will be created every-hour -->
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${APP_LOG_ROOT}" maxDepth="10">
+                    <!-- Delete all files older than 10 days -->
+                    <IfLastModified age="10d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root additivity="false" level="INFO">
+            <AppenderRef ref="restLog" />
+            <AppenderRef ref="errorLog" />
+        </Root>
+    </Loggers>
+</Configuration>

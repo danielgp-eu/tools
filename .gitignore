@@ -1,0 +1,4 @@
+target/
+tools-archiving/target/
+tools-core/target/
+tools-json_split/target/
