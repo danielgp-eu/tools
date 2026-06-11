@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.danielgp_eu.tools.core.CommonInteractiveClass;
 import org.danielgp_eu.tools.core.FileOperationsClass;
 
+import org.danielgp_eu.tools.core.ProjectClass;
 import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
 
@@ -32,6 +33,7 @@ public final class Application {
      */
     public static void main( final String[] args ) {
         CommonInteractiveClass.setStartDateTime();
+        ProjectClass.setExternalPomFile("/tools-archiving-pom.xml");
         CommonInteractiveClass.startMeUp();
         // execute appropriate Command with 
         final int iExitCode = new CommandLine(new Application()).execute(args);

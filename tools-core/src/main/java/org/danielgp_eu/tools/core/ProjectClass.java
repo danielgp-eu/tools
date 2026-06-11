@@ -217,7 +217,7 @@ public final class ProjectClass {
     private static void setPomFile() {
         if (!externalPomFile.isBlank()) {
             final String strFeedback = String.format("External POM file %s is being considered!", externalPomFile);
-            LogExposureClass.LOGGER.info(strFeedback);
+            LogExposureClass.LOGGER.debug(strFeedback);
         }
         if (isRunningFromJar()) {
             if (externalPomFile.isBlank()) {
@@ -298,7 +298,10 @@ public final class ProjectClass {
         public static Map<String, Object> getApplicationDetailsIntoMap() {
             final Map<String, Object> appDetails = new ConcurrentHashMap<>();
             final Model prjModel = getProjectModel();
-            appDetails.put("Application - " + prjModel.getGroupId() + ":" + prjModel.getArtifactId(), prjModel.getVersion());
+            appDetails.put("Application - "
+                    + (prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId())
+                    + ":" + prjModel.getArtifactId(),
+                    prjModel.getVersion() == null ? prjModel.getParent().getVersion() : prjModel.getVersion());
             final Map<String, Object> projDependencies = ComponentsSubClass.getProjectModelComponent(BasicStructuresClass.STR_DEPENDENCIES);
             if (!projDependencies.isEmpty()) {
                 projDependencies.forEach((strKey, objValue) -> appDetails.put("Direct Dependency - " + strKey, objValue));

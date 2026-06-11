@@ -234,6 +234,14 @@
                         <verbose>true</verbose>
                     </configuration>
                 </plugin>
+                <!-- Source: https://maven.apache.org/plugins/maven-antrun-plugin/ -->
+                <!-- Binaries: https://repo1.maven.org/maven2/org/apache/maven/plugins/maven-antrun-plugin -->
+                <!-- Description: Runs Ant scripts embedded in the POM -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${maven-antrun-plugin.version}</version>
+                </plugin>
                 <!-- Source: https://maven.apache.org/plugins/maven-assembly-plugin/download.cgi -->
                 <!-- Binaries: https://repo1.maven.org/maven2/org/apache/maven/plugins/maven-assembly-plugin -->
                 <!-- Description: A Maven plugin to create archives of your project's sources, classes, dependencies etc. from flexible assembly descriptors. -->

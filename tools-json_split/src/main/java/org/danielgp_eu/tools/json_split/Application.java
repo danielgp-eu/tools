@@ -4,10 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Properties;
 
-import org.danielgp_eu.tools.core.BasicStructuresClass;
-import org.danielgp_eu.tools.core.CommonInteractiveClass;
-import org.danielgp_eu.tools.core.FileOperationsClass;
-import org.danielgp_eu.tools.core.LogExposureClass;
+import org.danielgp_eu.tools.core.*;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
@@ -39,6 +36,7 @@ public final class Application {
      */
     /* default */ static void main(final String... args) {
         CommonInteractiveClass.setStartDateTime();
+        ProjectClass.setExternalPomFile("/tools-json-split-pom.xml");
         CommonInteractiveClass.startMeUp();
         // execute appropriate Command with 
         final int iExitCode = new CommandLine(new Application()).execute(args);

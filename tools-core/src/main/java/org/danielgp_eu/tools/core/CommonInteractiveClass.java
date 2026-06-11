@@ -61,9 +61,9 @@ public final class CommonInteractiveClass {
     private static String[] getProjectProperties() {
         final String[] strToReturn = new String[3];
         final Model projectModel = ProjectClass.getProjectModel();
-        strToReturn[0] = projectModel.getGroupId();
+        strToReturn[0] = projectModel.getGroupId() == null ? projectModel.getParent().getGroupId() : projectModel.getGroupId();
         strToReturn[1] = projectModel.getArtifactId();
-        strToReturn[2] = projectModel.getVersion();
+        strToReturn[2] = projectModel.getVersion() == null ? projectModel.getParent().getVersion() : projectModel.getVersion();
         return strToReturn;
     }
 
