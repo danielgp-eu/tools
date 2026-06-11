@@ -2,6 +2,7 @@ package org.danielgp_eu.tools.archiving;
 
 import java.util.Properties;
 
+import org.danielgp_eu.tools.core.BasicStructuresClass;
 import org.danielgp_eu.tools.core.CommonInteractiveClass;
 import org.danielgp_eu.tools.core.FileOperationsClass;
 
@@ -31,11 +32,11 @@ public final class Application {
      * default
      * @param args input arguments
      */
-    public static void main( final String[] args ) {
+    static void main( final String[] args ) {
         CommonInteractiveClass.setStartDateTime();
         ProjectClass.setExternalPomFile("/tools-archiving-pom.xml");
         CommonInteractiveClass.startMeUp();
-        // execute appropriate Command with 
+        // execute appropriate Command with
         final int iExitCode = new CommandLine(new Application()).execute(args);
         CommonInteractiveClass.setExitCode(iExitCode);
         CommonInteractiveClass.shutMeDown(args[0]);
@@ -56,7 +57,9 @@ class ArchiveFolders implements Runnable {
      */
     @CommandLine.Option(
             names = {"-aExe", "--archivingExecutable"},
-            description = "Archiving executable (including full path, optional)")
+            description = "Archiving executable (including full path, required, only one)",
+            arity = BasicStructuresClass.ARITY_ONLY_ONE,
+            required = true)
     private String strArchivingExec;
 
     /**
@@ -64,7 +67,8 @@ class ArchiveFolders implements Runnable {
      */
     @CommandLine.Option(
             names = {"-pwd", "--archivePassword"},
-            description = "Password for archive encryption")
+            description = "Password for archive encryption (optional, only one)",
+            arity = BasicStructuresClass.ARITY_ONLY_ONE)
     private String strArchivePwd;
 
     /**
@@ -72,7 +76,8 @@ class ArchiveFolders implements Runnable {
      */
     @CommandLine.Option(
             names = {"-ap", "--archivePrefix"},
-            description = "Prefix to apply to archive name")
+            description = "Prefix to apply to archive name (optional, only one)",
+            arity = BasicStructuresClass.ARITY_ONLY_ONE)
     private String strArchivePrefix;
 
     /**
@@ -80,7 +85,8 @@ class ArchiveFolders implements Runnable {
      */
     @CommandLine.Option(
             names = {"-as", "--archiveSuffix"},
-            description = "Suffix to apply to archive name")
+            description = "Suffix to apply to archive name (optional, only one)",
+            arity = BasicStructuresClass.ARITY_ONLY_ONE)
     private String strArchiveSuffix;
 
     /**

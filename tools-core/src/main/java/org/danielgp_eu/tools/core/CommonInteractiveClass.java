@@ -104,7 +104,7 @@ public final class CommonInteractiveClass {
          */
         @Option(
                 names = {"-fldDst", "--folderDestination"},
-                description = "Destination Folder where archives will be created",
+                description = "Destination Folder where archives will be created (required, only one)",
                 arity = BasicStructuresClass.ARITY_ONLY_ONE,
                 required = true)
         private static String strDestFolder;
@@ -134,7 +134,7 @@ public final class CommonInteractiveClass {
          */
         @Option(
                 names = {"-fldNm", "--folderName"},
-                description = "Folder Name in scope",
+                description = "Folder Name in scope (required, one or more)",
                 arity = BasicStructuresClass.ARITY_ONE_OR_MORE,
                 required = true)
         private static String[] strFolderNames;
