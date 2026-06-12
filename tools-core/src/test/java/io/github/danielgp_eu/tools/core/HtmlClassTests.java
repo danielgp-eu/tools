@@ -3,10 +3,6 @@ package io.github.danielgp_eu.tools.core;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import io.github.danielgp_eu.tools.core.BasicStructuresClass;
-import io.github.danielgp_eu.tools.core.HtmlClass;
-import io.github.danielgp_eu.tools.core.WebClass;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;

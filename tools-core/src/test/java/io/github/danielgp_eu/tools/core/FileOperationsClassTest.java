@@ -3,8 +3,6 @@ package io.github.danielgp_eu.tools.core;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import io.github.danielgp_eu.tools.core.FileOperationsClass;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

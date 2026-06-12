@@ -11,9 +11,6 @@ import java.time.ZoneOffset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import io.github.danielgp_eu.tools.core.BasicStructuresClass;
-import io.github.danielgp_eu.tools.core.TimingClass;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

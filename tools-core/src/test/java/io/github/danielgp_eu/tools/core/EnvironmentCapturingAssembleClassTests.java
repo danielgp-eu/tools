@@ -1,7 +1,6 @@
 package io.github.danielgp_eu.tools.core;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -9,9 +8,6 @@ import java.util.Properties;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import io.github.danielgp_eu.tools.core.EnvironmentCapturingAssembleClass;
-import io.github.danielgp_eu.tools.core.JsonOperationsClass;
 
 /**
  * Testing for EnvironmentCapturingAssembleClass
