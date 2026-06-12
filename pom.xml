@@ -314,6 +314,7 @@
                         <systemPropertyVariables>
                             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
                         </systemPropertyVariables>
+                        <argLine>@{argLine} --enable-native-access=ALL-UNNAMED</argLine>
                     </configuration>
                 </plugin>
                 <!-- Source: https://www.jacoco.org/jacoco/trunk/doc/maven.html -->
