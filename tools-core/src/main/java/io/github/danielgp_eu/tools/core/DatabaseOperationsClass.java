@@ -28,17 +28,11 @@ import tools.jackson.databind.JsonNode;
  * Database methods
  */
 public final class DatabaseOperationsClass {
-    /**
-     * NULL string
-     */
+    /** NULL string */
     public static final String STR_NULL = "NULL";
-    /**
-     * Regular Expression for Prompt Parameters within SQL Query
-     */
+    /** Regular Expression for Prompt Parameters within SQL Query */
     public static final String STR_QTD_STR_VL = "\"%s\"";
-    /**
-     * Values string
-     */
+    /** Values string */
     public static final String STR_VALUES = "Values";
 
     /**
@@ -315,7 +309,7 @@ public final class DatabaseOperationsClass {
                             final int index = intParameter + 1;
                             final String strKey = mapParameterOrder.get(intParameter);
                             final String strOriginalValue = currentProps.getProperty(strKey);
-                            properties.put("index", index);
+                            properties.put(BasicStructuresClass.STR_INDEX, index);
                             properties.put("strKey", strKey);
                             properties.put("strOriginalValue", strOriginalValue);
                             properties.put("strQuery", strQuery);
@@ -344,7 +338,8 @@ public final class DatabaseOperationsClass {
          * @param properties properties with relevant components
          */
         private static void bindSingleParameter(final PreparedStatement preparedStatement, final Properties properties) {
-            final int index = Integer.parseInt(properties.get("index").toString());
+            final String strIndex = properties.get(BasicStructuresClass.STR_INDEX).toString();
+            final int index = BasicStructuresClass.convertStringIntoInteger(strIndex);
             final String strKey = properties.get("strKey").toString();
             final String strQuery = properties.get("strQuery").toString();
             final String strOriginalValue = properties.get("strOriginalValue").toString();
@@ -440,14 +435,14 @@ public final class DatabaseOperationsClass {
         private static void captureToLogResultsetAttributes(final String key, final String strPurpose, final Properties objProperties) {
             switch (key) {
                 case "expectedExactNumberOfColumns":
-                    final int intColumnsShould = Integer.parseInt(objProperties.getProperty(key));
+                    final int intColumnsShould = BasicStructuresClass.convertStringIntoInteger(objProperties.getProperty(key));
                     final String strFeedbackC = String.format("For the \"%s\" query the Result Set was expected to have exact %s column(s) but a %s was/were found...", strPurpose, intColumnsShould, intColumnsIs);
                     LogExposureClass.LOGGER.error(strFeedbackC);
                     break;
                 case "expectedExactNumberOfRows":
-                    final int intExpectedRows = Integer.parseInt(objProperties.getProperty(key));
-                    if (intResultSetRows != intExpectedRows) {
-                        final String strFeedbackExR = String.format("For the \"%s\" query the Result Set was expected to have exact %s row(s) but a %s was/were found...", strPurpose, intExpectedRows, intResultSetRows);
+                    final int intRowsShould = BasicStructuresClass.convertStringIntoInteger(objProperties.getProperty(key));
+                    if (intResultSetRows != intRowsShould) {
+                        final String strFeedbackExR = String.format("For the \"%s\" query the Result Set was expected to have exact %s row(s) but a %s was/were found...", strPurpose, intRowsShould, intResultSetRows);
                         LogExposureClass.LOGGER.error(strFeedbackExR);
                     }
                     break;

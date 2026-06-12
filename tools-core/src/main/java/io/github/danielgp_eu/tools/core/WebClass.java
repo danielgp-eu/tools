@@ -218,7 +218,8 @@ public final class WebClass {
             String strRowColor = "#fff";
             if (!agingDays.isEmpty()) {
                 final long[] longRanges = {14, 30, 90};
-                final long longAging = Long.parseLong(agingDays.replaceAll(".0$", ""));
+                final String cleanedAging = agingDays.replaceAll(".0$", "");
+                final long longAging = BasicStructuresClass.convertStringIntoLong(cleanedAging);
                 if (longAging <= longRanges[0]) {
                     strRowColor = "#51ff6d";
                 } else if (longAging <= longRanges[1]) {

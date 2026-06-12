@@ -1,11 +1,6 @@
 package io.github.danielgp_eu.tools.core;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SequencedMap;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -145,9 +140,9 @@ public final class RegularExpressionsClass {
         double decToReturn = 0.0;
         if (matched.matches()) {
             final double sign = "-".equals(matched.group(1)) ? -1.0 : 1.0;
-            final double deg = Double.parseDouble(matched.group(2));
-            final double min = Double.parseDouble(matched.group(3));
-            final double sec = (matched.group(4) != null) ? Double.parseDouble(matched.group(4)) : 0.0;
+            final double deg = BasicStructuresClass.convertStringIntoDouble(matched.group(2));
+            final double min = BasicStructuresClass.convertStringIntoDouble(matched.group(3));
+            final double sec = (matched.group(4) != null) ? BasicStructuresClass.convertStringIntoDouble(matched.group(4)) : 0.0;
             decToReturn = sign * (deg + (min / 60.0) + (sec / 3600.0));
         }
         return decToReturn;

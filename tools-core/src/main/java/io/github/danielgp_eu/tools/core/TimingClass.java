@@ -121,12 +121,12 @@ public final class TimingClass {
     @NonNull
     public static LocalDateTime getLocalDateTimeFromStrings(@NonNull final String strDateIso8601, @NonNull final String timeContinuous) {
         return LocalDateTime.of(
-                Integer.parseInt(strDateIso8601.substring(0, 4)),
-                Integer.parseInt(strDateIso8601.substring(5, 7)),
-                Integer.parseInt(strDateIso8601.substring(8)),
-                Integer.parseInt(timeContinuous.substring(0, 2)),
-                Integer.parseInt(timeContinuous.substring(2, 4)),
-                Integer.parseInt(timeContinuous.substring(4, 6)));
+                BasicStructuresClass.convertStringIntoInteger(strDateIso8601.substring(0, 4)),
+                BasicStructuresClass.convertStringIntoInteger(strDateIso8601.substring(5, 7)),
+                BasicStructuresClass.convertStringIntoInteger(strDateIso8601.substring(8, 10)),
+                BasicStructuresClass.convertStringIntoInteger(timeContinuous.substring(0, 2)),
+                BasicStructuresClass.convertStringIntoInteger(timeContinuous.substring(2, 4)),
+                BasicStructuresClass.convertStringIntoInteger(timeContinuous.substring(4, 6)));
     }
 
     /**

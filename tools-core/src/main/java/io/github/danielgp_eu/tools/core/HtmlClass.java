@@ -386,10 +386,10 @@ public final class HtmlClass {
                     strValue = String.format(Locale.US, "%,.2f", new BigDecimal(strValue));
                 } else if (BasicStructuresClass.StringEvaluationSubClass.isStringActuallyInteger(strValue)) {
                     cellStyle = CSS_TEXT_RIGHT;
-                    strValue = String.format(Locale.US, "%,d", Integer.parseInt(strValue));
+                    strValue = String.format(Locale.US, "%,d", BasicStructuresClass.convertStringIntoInteger(strValue));
                 } else if (BasicStructuresClass.StringEvaluationSubClass.isStringActuallyLong(strValue)) {
                     cellStyle = CSS_TEXT_RIGHT;
-                    strValue = String.format(Locale.US, "%,d", Long.parseLong(strValue));
+                    strValue = String.format(Locale.US, "%,d", BasicStructuresClass.convertStringIntoLong(strValue));
                 } else if (BasicStructuresClass.StringEvaluationSubClass.isStringActuallyDate(strValue)) {
                     cellStyle = CSS_TEXT_RIGHT;
                     strValue = TimingClass.LocalizationSubClass.formatDateFriendly(strValue, "yyyy-MM-dd", "EEE, dd MMM yyyy");

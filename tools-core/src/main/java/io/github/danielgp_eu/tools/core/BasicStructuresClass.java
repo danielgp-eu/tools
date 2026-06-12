@@ -38,6 +38,8 @@ public final class BasicStructuresClass {
     public static final String STR_ACTV_PXLS = "Active Pixels";
     /** Content constant */
     public static final String STR_CONTENT = "Content";
+    /** frequently expression used to catch conversion error  */
+    public static final String CONVERT_INT_NA = "Could not convert value %s into Integer... %s";
     /** Dependencies constant */
     public static final String STR_DEPENDENCIES = "Dependencies";
     /** String for internal ETL */
@@ -56,6 +58,8 @@ public final class BasicStructuresClass {
     public static final String STR_TM_HUMAN = "HumanReadableTime";
     /** Icon string */
     public static final String STR_ICON = "icon";
+    /** Index string */
+    public static final String STR_INDEX = "index";
     /** Input string */
     public static final String STR_INPUT = "Input";
     /** Just Date string */
@@ -169,15 +173,58 @@ public final class BasicStructuresClass {
     }
 
     /**
+     * Convert String to Double
+     * @param strNumber string to evaluate
+     * @return double
+     */
+    public static double convertStringIntoDouble(final String strNumber) {
+        double noToReturn = 0.0;
+        try {
+            noToReturn = Double.parseDouble(strNumber);
+        } catch (NumberFormatException noFormatException) {
+            final String strFeedback = String.format("Could not convert value %s into Double... %s", strNumber,
+                    Arrays.toString(noFormatException.getStackTrace()));
+            LogExposureClass.LOGGER.error(strFeedback);
+        }
+        return noToReturn;
+    }
+
+    /**
      * Convert String to Integer
      * @param strNumber string to evaluate
      * @return integer
      */
     public static int convertStringIntoInteger(final String strNumber) {
         int noToReturn = 0;
+        final boolean isNumeric = StringEvaluationSubClass.isStringActuallyInteger(strNumber);
+        if (isNumeric) {
+            try {
+                noToReturn = Integer.parseInt(strNumber);
+            } catch (NumberFormatException noFormatException) {
+                final String strFeedback = String.format(CONVERT_INT_NA, strNumber,
+                        Arrays.toString(noFormatException.getStackTrace()));
+                LogExposureClass.LOGGER.error(strFeedback);
+            }
+        }
+        return noToReturn;
+    }
+
+    /**
+     * Convert String to Integer
+     * @param strNumber string to evaluate
+     * @return long
+     */
+    public static long convertStringIntoLong(final String strNumber) {
+        long noToReturn = 0;
         final boolean isNumeric = StringEvaluationSubClass.isStringActuallyLong(strNumber);
         if (isNumeric) {
-            noToReturn = Integer.parseInt(strNumber);
+            try {
+                noToReturn = Long.parseLong(strNumber);
+            } catch (NumberFormatException noFormatException) {
+                final String strFeedback = String.format(CONVERT_INT_NA, strNumber,
+                        Arrays.toString(noFormatException.getStackTrace()));
+                LogExposureClass.LOGGER.error(strFeedback);
+            }
         }
         return noToReturn;
     }
@@ -532,8 +579,14 @@ public final class BasicStructuresClass {
             boolean evaluation = RegularExpressionsClass.ValidationSubClass.isStringActuallySomething(inputString, "long");
             if (evaluation
                     && inputString.length() >= MAX_LENGTH_INT) {
-                final long longValue = Long.parseLong(inputString);
-                if (longValue > MAX_INT) {
+                try {
+                    final long longValue = Long.parseLong(inputString);
+                    if (longValue > MAX_INT) {
+                        evaluation = false;
+                    }
+                } catch (NumberFormatException noFormatException) {
+                    final String strFeedback = String.format(CONVERT_INT_NA, inputString, Arrays.toString(noFormatException.getStackTrace()));
+                    LogExposureClass.LOGGER.error(strFeedback);
                     evaluation = false;
                 }
             }

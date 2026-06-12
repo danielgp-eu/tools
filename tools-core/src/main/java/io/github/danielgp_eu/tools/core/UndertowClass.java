@@ -105,9 +105,11 @@ public final class UndertowClass {
                     .addPrefixPath("/", rootHandler);
             // finally package everything to consider Session handler
             final HttpHandler sessionHandler = SessionSubClass.getSessionHandler(routesHandler);
+            // determine the relevant port
+            final int relevantWebPort = BasicStructuresClass.convertStringIntoInteger(webPort);
             // start Web Server
             final Undertow.Builder builder = Undertow.builder()
-                    .addHttpListener(Integer.parseInt(webPort), webIp)
+                    .addHttpListener(relevantWebPort, webIp)
                     .setHandler(sessionHandler);
             final Undertow server = builder.build();
             final String strFeedback = String.format("Server running at %s://%s:%s", webProtocol, webIp, webPort);
