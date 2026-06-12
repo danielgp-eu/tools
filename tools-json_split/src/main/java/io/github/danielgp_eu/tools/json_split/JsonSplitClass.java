@@ -24,7 +24,7 @@ import tools.jackson.core.ObjectWriteContext;
 import tools.jackson.core.json.JsonFactory;
 
 /**
- * JSON spit logic
+ * JSON split logic
  */
 public final class JsonSplitClass {
     /**
@@ -174,7 +174,7 @@ public final class JsonSplitClass {
         FileOperationsClass.MassChangeSubClass.setSearchingFolder(strOutFolder); // used for Mass Change (if necessary)
         final String strFeedbackTemp = String.format("JSON file named %s will be split into smaller pieces...", strInputJsonFile);
         LogExposureClass.LOGGER.debug(strFeedbackTemp);
-        String remeberedValue = null;
+        String rememberedValue = null;
         long recordCounter = 0;
         // initiate JSON parsing
         try (JsonParser jsonParser = jsonFactory.createParser(readContext, Path.of(strInputJsonFile))) {
@@ -187,7 +187,7 @@ public final class JsonSplitClass {
                 final String crtBucketValue = objectProperties.getProperty("Value");
                 final String strRecord = objectProperties.getProperty("Record");
                 // Start a new output file if the field value changed
-                if (!crtBucketValue.equals(remeberedValue)) {
+                if (!crtBucketValue.equals(rememberedValue)) {
                     if (writer != null) {
                         closeCurrentFile(crtFile, writer, recordCounter);
                         recordCounter = 0;
@@ -195,7 +195,7 @@ public final class JsonSplitClass {
                     final Path outFile = buildDestinationFullFileName(crtBucketValue);
                     crtFile = outFile;
                     writeObjectStart(outFile);
-                    remeberedValue = crtBucketValue;
+                    rememberedValue = crtBucketValue;
                 }
                 // Write buffered object to the current output file
                 writeValueToNewBufferedWriter(recordCounter, writer, strRecord);
@@ -205,7 +205,7 @@ public final class JsonSplitClass {
             if (writer != null) {
                 closeCurrentFile(crtFile, writer, recordCounter);
             }
-        } catch(JacksonException ej) {
+        } catch (JacksonException ej) {
             final String strFeedback = String.format("Jackson exception on... %s", Arrays.toString(ej.getStackTrace()));
             LogExposureClass.LOGGER.debug(strFeedback);
         }
