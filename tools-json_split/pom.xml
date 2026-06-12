@@ -12,8 +12,8 @@
     </parent>
 
     <artifactId>tools-json_split</artifactId>
-
     <name>json_split</name>
+    <description>Java classes to split huge JSON file(s) into smaller and more manageable pieces</description>
 
     <dependencies>
         <dependency>
@@ -78,6 +78,7 @@
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>

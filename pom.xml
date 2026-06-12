@@ -393,6 +393,17 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <extensions>true</extensions>
+            </plugin>
+        </plugins>
     </build>
 
     <distributionManagement>
@@ -401,35 +412,5 @@
             <url>https://central.sonatype.com/api/v1/publisher</url>
         </repository>
     </distributionManagement>
-
-    <profiles>
-        <profile>
-            <id>gpg</id>
-            <build>
-                <plugins>
-                    <!-- Generate sources JAR -->
-                    <plugin>
-                        <groupId>io.takari.maven.plugins</groupId>
-                        <artifactId>takari-lifecycle-plugin</artifactId>
-                    </plugin>
-                    <!-- Generate Javadoc JAR -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                    <!-- Sign artifacts with GPG -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                    </plugin>
-                    <!-- Deploy to Maven Central using central-publishing-maven-plugin -->
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>

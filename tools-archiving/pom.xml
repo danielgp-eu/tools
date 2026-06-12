@@ -12,6 +12,8 @@
     </parent>
 
     <artifactId>tools-archiving</artifactId>
+    <description>Java wrapper classes to archive one or multiple folders (using external 7za binary
+        executable relevant to the host system)</description>
     <packaging>jar</packaging>
 
     <name>tools-archiving</name>
@@ -79,6 +81,7 @@
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>
