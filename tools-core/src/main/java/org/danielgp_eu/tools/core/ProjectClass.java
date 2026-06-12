@@ -258,11 +258,11 @@ public final class ProjectClass {
             final Model prjModel = getProjectModel();
             final StringBuilder strJsonString = new StringBuilder(100);
             strJsonString.append("\"Application\":{\"")
-                    .append(prjModel.getGroupId())
+                    .append(prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId())
                     .append(':')
                     .append(prjModel.getArtifactId())
                     .append("\":\"")
-                    .append(prjModel.getVersion())
+                    .append(prjModel.getVersion() == null ? prjModel.getParent().getVersion() : prjModel.getVersion())
                     .append('\"');
             final Map<String, Object> projDependencies = ComponentsSubClass.getProjectModelComponent(BasicStructuresClass.STR_DEPENDENCIES);
             if (!projDependencies.isEmpty()) {
@@ -347,7 +347,7 @@ public final class ProjectClass {
                 strJsonModule.append("{\"POM\":\"")
                         .append(crtModulePom.replace("\\", "\\\\"))
                         .append("\",\"")
-                        .append(prjModel.getGroupId())
+                        .append(prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId())
                         .append(':')
                         .append(prjModuleModel.getArtifactId())
                         .append("\":\"")
