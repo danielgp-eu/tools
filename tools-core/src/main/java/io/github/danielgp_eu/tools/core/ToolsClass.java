@@ -51,7 +51,7 @@ public final class ToolsClass {
     /* default */ static void main(final String... args) {
         CommonInteractiveClass.setStartDateTime();
         CommonInteractiveClass.startMeUp();
-        // execute appropriate Command with 
+        // execute appropriate Command with provided arguments
         final int iExitCode = new CommandLine(new ToolsClass()).execute(args);
         CommonInteractiveClass.setExitCode(iExitCode);
         CommonInteractiveClass.shutMeDown(args[0]);
