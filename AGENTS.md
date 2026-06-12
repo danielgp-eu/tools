@@ -13,11 +13,11 @@ All modules target **Java 26** and publish to Maven Central Repository.
 
 ```
 tools (parent POM)
-├── tools-core (org.danielgp_eu.tools.core)
+├── tools-core (io.github.danielgp_eu.tools.core)
 │   └── No dependencies on other modules; contains all core utilities
-├── tools-archiving (org.danielgp_eu.tools.archiving)
+├── tools-archiving (io.github.danielgp_eu.tools.archiving)
 │   └── Depends on: tools-core
-└── tools-json_split (org.danielgp_eu.tools.json_split)
+└── tools-json_split (io.github.danielgp_eu.tools.json_split)
     └── Depends on: tools-core
 ```
 
@@ -52,7 +52,7 @@ mvn central-publishing:publish
 - Coverage: JaCoCo (configured in root pom.xml)
 - Test Classes: Located in `src/test/java/`, named `*Test.java`
 - Example: `FileOperationsClassTest` uses `@Test` and `@DisplayName`
-- VM Argument for tests: `--add-opens org.danielgp_eu.tools.core/org.danielgp_eu.tools.core.internal=ALL-UNNAMED` (module access)
+- VM Argument for tests: `--enable-native-access=ALL-UNNAMED` (module access)
 
 ## Key Files & Packages
 
@@ -125,7 +125,7 @@ This avoids creating separate files while maintaining logical grouping.
 ### Common Utility Access Pattern
 ```java
 // In tools-archiving or tools-json_split
-import org.danielgp_eu.tools.core.*;
+import io.github.danielgp_eu.tools.core.*;
 
 // Use static methods from core utilities
 String fileSize = FileOperationsClass.RetrievingSubClass.getFileSizeFromPath(path);

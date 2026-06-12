@@ -1,6 +1,6 @@
 package io.github.danielgp_eu.tools.archiving;
 
-import org.danielgp_eu.tools.core.*;
+import io.github.danielgp_eu.tools.core.*;
 import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
 

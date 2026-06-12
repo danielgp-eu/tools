@@ -15,7 +15,7 @@ public final class LogExposureClass {
     /**
      * Logger
      */
-    public static final Logger LOGGER = LogManager.getLogger("org.danielgp-eu.tools");
+    public static final Logger LOGGER = LogManager.getLogger("io.github.danielgp-eu.tools");
     /**
      * standard Unknown feature
      */

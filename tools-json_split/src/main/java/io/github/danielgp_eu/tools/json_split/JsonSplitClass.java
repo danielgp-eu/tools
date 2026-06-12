@@ -12,8 +12,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Properties;
 
-import org.danielgp_eu.tools.core.FileOperationsClass;
-import org.danielgp_eu.tools.core.LogExposureClass;
+import io.github.danielgp_eu.tools.core.FileOperationsClass;
+import io.github.danielgp_eu.tools.core.LogExposureClass;
 
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonGenerator;

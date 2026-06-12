@@ -1,4 +1,4 @@
-# org.danielgp_eu.tools
+# io.github.danielgp_eu.tools
 
 Various Java classes to be re-used
 
