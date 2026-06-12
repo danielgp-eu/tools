@@ -77,10 +77,9 @@ public final class ProjectClass {
     public static String getFirstDeveloper(final Model projectModel) {
         final java.util.List<Developer> prjDevs = projectModel.getDevelopers();
         String prjFirstDeveloper = "Developer(s) not defined";
-        if (prjDevs != null) {
-            if(!prjDevs.isEmpty()) {
+        if (prjDevs != null
+            && !prjDevs.isEmpty()) {
                 prjFirstDeveloper = projectModel.getDevelopers().getFirst().getName();
-            }
         }
         return prjFirstDeveloper;
     }
