@@ -395,6 +395,13 @@
         </pluginManagement>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <url>https://central.sonatype.com/api/v1/publisher</url>
+        </repository>
+    </distributionManagement>
+
     <profiles>
         <profile>
             <id>gpg</id>
