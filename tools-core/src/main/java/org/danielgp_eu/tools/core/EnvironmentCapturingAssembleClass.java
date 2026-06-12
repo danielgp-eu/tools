@@ -27,27 +27,21 @@ public final class EnvironmentCapturingAssembleClass {
      */
     private static Map<String, Object> gatherEnvironmentDetails() {
         final String strInsteadOfNull = "---";
-    String strComputer = System.getenv("COMPUTERNAME");
-        if (strComputer == null) {
-        strComputer = System.getenv("HOSTNAME");
-    }
-    String username = System.getenv("USERNAME");
-        if (username == null) {
-        username = System.getProperty("user.name", strInsteadOfNull);
-    }
-    final String userAccount = ShellingClass.getCurrentUserAccount();
+        final String strComputer = getComputerName(strInsteadOfNull);
+        final String username = getUserName(strInsteadOfNull);
+        final String userAccount = ShellingClass.getCurrentUserAccount();
         return Map.of(
-                "Computer", strComputer != null ? strComputer : strInsteadOfNull,
-            "Country", System.getProperty("user.country", strInsteadOfNull),
-            "Country.Format", System.getProperty("user.country.format", strInsteadOfNull),
-            "Language", System.getProperty("user.language", strInsteadOfNull),
-            "Language.Format", System.getProperty("user.language.format", strInsteadOfNull),
-            "Home", System.getProperty("user.home", strInsteadOfNull).replace("\\", "\\\\"),
+                "Computer", strComputer,
+                "Country", System.getProperty("user.country", strInsteadOfNull),
+                "Country.Format", System.getProperty("user.country.format", strInsteadOfNull),
+                "Language", System.getProperty("user.language", strInsteadOfNull),
+                "Language.Format", System.getProperty("user.language.format", strInsteadOfNull),
+                "Home", System.getProperty("user.home", strInsteadOfNull).replace("\\", "\\\\"),
                 "Name", System.getProperty("user.name", strInsteadOfNull),
-            "Timezone", System.getProperty("user.timezone", strInsteadOfNull),
-            "Username", username,
-            "User Account", userAccount);
-}
+                "Timezone", System.getProperty("user.timezone", strInsteadOfNull),
+                "Username", username,
+                "User Account", userAccount);
+    }
 
     /**
      * Hardware details gathered
@@ -91,6 +85,35 @@ public final class EnvironmentCapturingAssembleClass {
                 "OS", JsonOperationsClass.getMapIntoJsonString(HardwareSubClass.getDetailsAboutOperatingSystem()),
                 "Network", JsonOperationsClass.getMapIntoJsonString(HardwareSubClass.getDetailsAboutNetwork()),
                 "Storage", JsonOperationsClass.getMapIntoJsonString(OshiUsageClass.getDetailsAboutAvailableStoragePartitions()));
+    }
+
+    /**
+     * Capturing computer name
+     * @param strInsteadOfNull alternative text if not found
+     * @return String with computer name
+     */
+    private static String getComputerName(final String strInsteadOfNull) {
+        String strComputer = System.getenv("COMPUTERNAME");
+        if (strComputer == null) {
+            strComputer = System.getenv("HOSTNAME");
+        }
+        if (strComputer == null) {
+            strComputer = strInsteadOfNull;
+        }
+        return strComputer;
+    }
+
+    /**
+     * Capturing user name
+     * @param strInsteadOfNull alternative text if not found
+     * @return String with user name
+     */
+    private static String getUserName(final String strInsteadOfNull) {
+        String username = System.getenv("USERNAME");
+        if (username == null) {
+            username = System.getProperty("user.name", strInsteadOfNull);
+        }
+        return username;
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.danielgp_eu.tools.core;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -23,7 +24,7 @@ class EnvironmentCapturingAssembleClassTests {
     }
 
     @Test
-    @DisplayName("Additional test to check if environment details gathering results returns a valid JSON")
+    @DisplayName("Check if environment details gathering results is not null")
     void testPackageCurrentEnvironmentDetailsIntoListOfProperties() {
         final List<Properties> handled = EnvironmentCapturingAssembleClass.packageCurrentEnvironmentDetailsIntoListOfProperties();
         assertNotNull(handled, String.format("Environment gathering logic should not be null... %s", handled));
