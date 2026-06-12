@@ -15,6 +15,13 @@ import java.nio.file.Path;
 class HtmlClassTests {
 
     @Test
+    @DisplayName("buildApplicationDetail should be returned as String")
+    void buildApplicationDetail() {
+        final String appDetail = HtmlClass.buildApplicationDetail();
+        assertTrue(appDetail.contains(" &copy; by "), "Application detail should have Copyright symbol followed by");
+    }
+
+    @Test
     @DisplayName("buildGeographicalCoordinatesFromTimeZone returns coordinates for known zone")
     void buildGeographicalCoordinatesKnownZoneReturnsCoordinates() {
         final String coords = HtmlClass.buildGeographicalCoordinatesFromTimeZone("Europe/London");

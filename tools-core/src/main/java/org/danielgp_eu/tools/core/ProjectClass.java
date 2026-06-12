@@ -14,6 +14,7 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -66,6 +67,22 @@ public final class ProjectClass {
     public static String buildProductObjectModelFileInfoBox() {
         final Path fileName = Path.of(pomFile);
         return HtmlClass.buildFileInfoBox(fileName);
+    }
+
+    /**
+     * retrieving first Developer within Project Model
+     * @param projectModel input Project Model
+     * @return String with first developer value
+     */
+    public static String getFirstDeveloper(final Model projectModel) {
+        final java.util.List<Developer> prjDevs = projectModel.getDevelopers();
+        String prjFirstDeveloper = "Developer(s) not defined";
+        if (prjDevs != null) {
+            if(!prjDevs.isEmpty()) {
+                prjFirstDeveloper = projectModel.getDevelopers().getFirst().getName();
+            }
+        }
+        return prjFirstDeveloper;
     }
 
     /**
