@@ -2,6 +2,7 @@ package io.github.danielgp_eu.tools.core;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -349,7 +350,7 @@ class BasicStructuresClassTests {
         @DisplayName("Compute string signature produces non-empty output")
         void computeStringSignatureProducesNonEmptyOutput() {
             final String signature = BasicStructuresClass.StringTransformationSubClass.computeStringSignature("test");
-            assertTrue(!signature.isEmpty(), "Signature should not be empty");
+            assertFalse(signature.isEmpty(), "Signature should not be empty");
         }
 
         @Test

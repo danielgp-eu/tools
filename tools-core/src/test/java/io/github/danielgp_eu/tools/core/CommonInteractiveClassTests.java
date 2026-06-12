@@ -4,8 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing for CommonInteractiveClass
@@ -21,8 +20,7 @@ class CommonInteractiveClassTests {
     @DisplayName("Folder destination option mixin get folder destination returns set value")
     void folderDestinationOptionMixinGetFolderDestinationReturnsSetValue() {
         final CommonInteractiveClass.FolderDestinationOptionMixinClass mixin = new CommonInteractiveClass.FolderDestinationOptionMixinClass();
-        final String destination = mixin.getFolderDestination();
-        assertTrue(destination != null || destination == null, "getFolderDetination should return a value or null");
+        assertDoesNotThrow(mixin::getFolderDestination, "getFolderDestination should not throw");
     }
 
     /**

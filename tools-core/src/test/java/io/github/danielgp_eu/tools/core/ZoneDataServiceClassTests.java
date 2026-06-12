@@ -29,7 +29,7 @@ class ZoneDataServiceClassTests {
         final SequencedMap<String, String> timeZones = ZoneDataServiceClass.loadSupportedTimeZones();
         for (final String value : timeZones.values()) {
             assertAll("Loaded time zones are properly sorted with UTC offsets",
-                    () -> assertTrue(!value.isEmpty(), "Time zone display value should not be empty"),
+                    () -> assertFalse(value.isEmpty(), "Time zone display value should not be empty"),
                     () -> assertTrue(value.contains("UTC"), "Time zone display should contain UTC offset")
             );
         }
@@ -58,7 +58,7 @@ class ZoneDataServiceClassTests {
         final ZoneDataServiceClass.ZoneInfoRecord zoneInfo = ZoneDataServiceClass.get("Europe/Berlin");
         assertAll("Get zone info includes country codes",
                 () -> assertNotNull(zoneInfo, ZONE_INFO_NOT_NUL),
-                () -> assertTrue(!zoneInfo.countryCodes().isEmpty(), "Country codes should not be empty")
+                () -> assertFalse(zoneInfo.countryCodes().isEmpty(), "Country codes should not be empty")
         );
     }
 
@@ -68,7 +68,7 @@ class ZoneDataServiceClassTests {
         final ZoneDataServiceClass.ZoneInfoRecord zoneInfo = ZoneDataServiceClass.get("Asia/Tokyo");
         assertAll("Get zone info includes country names",
                 () -> assertNotNull(zoneInfo, "Zone info should not be null for country"),
-                () -> assertTrue(!zoneInfo.countryNames().isEmpty(), "Country names should not be empty")
+                () -> assertFalse(zoneInfo.countryNames().isEmpty(), "Country names should not be empty")
         );
     }
 
@@ -86,7 +86,7 @@ class ZoneDataServiceClassTests {
     @DisplayName("Get all zones returns non-empty collection")
     void testGetAllZonesReturnsNonEmpty() {
         final Collection<ZoneDataServiceClass.ZoneInfoRecord> allZones = ZoneDataServiceClass.getAll();
-        assertTrue(!allZones.isEmpty(), "All zones collection should not be empty");
+        assertFalse(allZones.isEmpty(), "All zones collection should not be empty");
     }
 
     @Test
@@ -96,7 +96,7 @@ class ZoneDataServiceClassTests {
         for (final ZoneDataServiceClass.ZoneInfoRecord zoneRecord : allZones) {
             assertAll("Get all zones returns cached zones with current offsets",
                     () -> assertTrue(zoneRecord.friendlyOffset().startsWith("UTC"), "Each zone should have UTC offset"),
-                    () -> assertTrue(!zoneRecord.zoneId().isEmpty(), "Each zone should have a zone ID")
+                    () -> assertFalse(zoneRecord.zoneId().isEmpty(), "Each zone should have a zone ID")
             );
         }
     }
