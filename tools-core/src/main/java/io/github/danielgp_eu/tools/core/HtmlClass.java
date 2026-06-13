@@ -37,8 +37,7 @@ public final class HtmlClass {
         final Model prjModel = ProjectClass.getProjectModel();
         final String prjVersion = ProjectClass.getProjectVersion(prjModel);
         final String prjFirstDeveloper = ProjectClass.getFirstDeveloper(prjModel);
-        final String appDetails = String.format("%s&trade; v.%s &copy; by %s", prjModel.getName(), prjVersion, prjFirstDeveloper);
-        return appDetails;
+        return String.format("%s&trade; v.%s &copy; by %s", prjModel.getName(), prjVersion, prjFirstDeveloper);
     }
 
     /**
