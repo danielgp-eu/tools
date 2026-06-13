@@ -8,6 +8,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * HtmlClass tests
@@ -79,7 +83,18 @@ class HtmlClassTests {
     @Test
     @DisplayName("HtmlClass.buildMenuString produces select with time zones")
     void buildMenuString() {
-        final java.util.SequencedMap<String, java.util.Map<String, String>> inMapMenu = WebClass.getMenu();
+        final java.util.SequencedMap<String, java.util.Map<String, String>> inMapMenu = Stream.of(
+                Map.entry("home", Map.of(
+                        BasicStructuresClass.STR_ICON, "fa-solid fa-house-user",
+                        BasicStructuresClass.STR_MENU, "HomePage",
+                        BasicStructuresClass.STR_TITLE, "HomePage"))
+        ).collect(
+                Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (v1, _) -> v1,
+                        LinkedHashMap::new)  // Ensures it returns a SequencedMap
+        );
         final String myMenu = HtmlClass.buildMenuString(inMapMenu);
         assertAll("Select HTML correctness",
                 () -> assertTrue(myMenu.contains("<li>"), "HTML should contain li tag"),

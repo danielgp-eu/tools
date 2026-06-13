@@ -1,3 +1,15 @@
+/*
+ * Copyright 2026 Daniel-Gheorghe Popiniuc
+ *
+ * Licensed under the Mozilla Public License Version 2.0 (the "License");
+ *
+ * MPL 2.0 is a copyleft license that is easy to comply with.
+ * You must make the source code for any of your changes available under MPL,
+ *   but you can combine the MPL software with proprietary code,
+ *   as long as you keep the MPL code in separate files.
+ * Version 2.0 is, by default, compatible with LGPL and GPL version 2 or greater.
+ * You can distribute binaries under a proprietary license, as long as you make the source available under MPL.
+ */
 package io.github.danielgp_eu.tools.core;
 
 import java.io.BufferedReader;
@@ -188,6 +200,29 @@ public final class ProjectClass {
             moduleMap.put(strName, strVersion);
         });
         return moduleMap;
+    }
+
+    /**
+     * Exposes project version
+     * @param prjModel input Project Model
+     * @return String with version
+     */
+    public static String getProjectVersion(final Model prjModel) {
+        String prjVersion = prjModel.getVersion();
+        final String strFeedback = String.format("I picked initial version as %s", prjVersion);
+        LogExposureClass.LOGGER.info(strFeedback);
+        if (prjVersion == null) {
+            prjVersion = prjModel.getParent().getVersion();
+            final String strFeedback2 = String.format("As initial version was NULL I re-picked version from parent and is %s", prjVersion);
+            LogExposureClass.LOGGER.info(strFeedback2);
+        }
+        if (prjVersion.startsWith("${")
+                && prjVersion.endsWith("}")) {
+            prjVersion = getProjectModelValueWithInterpolationIfNeeded(prjVersion);
+            final String strFeedback3 = String.format("Final interpolated version is %s", prjVersion);
+            LogExposureClass.LOGGER.info(strFeedback3);
+        }
+        return prjVersion;
     }
 
     /**

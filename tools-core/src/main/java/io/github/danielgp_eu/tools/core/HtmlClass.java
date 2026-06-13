@@ -35,11 +35,9 @@ public final class HtmlClass {
      */
     public static String buildApplicationDetail() {
         final Model prjModel = ProjectClass.getProjectModel();
-        final String prjVersion = prjModel.getVersion() == null ? prjModel.getParent().getVersion() : prjModel.getVersion();
+        final String prjVersion = ProjectClass.getProjectVersion(prjModel);
         final String prjFirstDeveloper = ProjectClass.getFirstDeveloper(prjModel);
         final String appDetails = String.format("%s&trade; v.%s &copy; by %s", prjModel.getName(), prjVersion, prjFirstDeveloper);
-        final String strFeedback = String.format("I have just build application details: %s", appDetails);
-        LogExposureClass.LOGGER.info(strFeedback);
         return appDetails;
     }
 

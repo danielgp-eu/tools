@@ -30,8 +30,7 @@ import picocli.CommandLine.Mixin;
             CleanOlderFilesFromFolder.class,
             ExperimentalFeature.class,
             GetInformationFromDatabase.class,
-            GetSubFoldersFromFolders.class,
-            JavaJavaWebUserInterface.class
+            GetSubFoldersFromFolders.class
     }
 )
 public final class ToolsClass {
@@ -594,59 +593,4 @@ class GetSubFoldersFromFolders implements Runnable {
         super();
     }
 
-}
-
-/**
- * Supports web interface
- */
-@CommandLine.Command(
-    name = "JavaJavaWebUserInterface", 
-    description = "Initiate JavaJava web user interface")
-class JavaJavaWebUserInterface implements Runnable {
-
-    /**
-     * String for Database
-     */
-    @CommandLine.Option(
-        names = {"-dbr", "--databaseReleases"},
-        description = "Database Name with Releases",
-        arity = BasicStructuresClass.ARITY_ONLY_ONE,
-        required = true
-    )
-    private static String strDbReleases;
-
-    /**
-     * String for Database
-     */
-    @CommandLine.Option(
-        names = {"-p", "--port"},
-        description = "Port Number for web user interface",
-        arity = BasicStructuresClass.ARITY_ONLY_ONE,
-        required = true
-    )
-    private static long portNumber;
-
-    /**
-     * adds the options defined in 
-     * CommonInteractiveClass.FolderNameOptionMixinClass to this command
-     */
-    @Mixin
-    private final CommonInteractiveClass.FolderNameOptionMixinClass optFolderNames = new CommonInteractiveClass.FolderNameOptionMixinClass();
-
-    @Override
-    public void run() {
-        UndertowClass.setWebPort(String.valueOf(portNumber));
-        DatabaseOperationsClass.SpecificSqLiteSubClass.setInternalDatabase(strDbReleases);
-        WebClass.SoftwareReleasesSubClass.setReleasesDatabase(strDbReleases);
-        WebClass.setFolderNamesForChecksumExposure(optFolderNames.getFolderNames());
-        UndertowClass.setRootHandler(WebClass.handleWebContent());
-        UndertowClass.runWebServer();
-    }
-
-    /**
-     * Constructor
-     */
-    protected JavaJavaWebUserInterface() {
-        // intentionally blank
-    }
 }

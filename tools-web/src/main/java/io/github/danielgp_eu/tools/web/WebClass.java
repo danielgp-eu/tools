@@ -1,4 +1,9 @@
-package io.github.danielgp_eu.tools.core;
+package io.github.danielgp_eu.tools.web;
+
+import gg.jte.TemplateEngine;
+import gg.jte.output.Utf8ByteOutput;
+import io.github.danielgp_eu.tools.core.*;
+import io.undertow.server.HttpHandler;
 
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -7,10 +12,6 @@ import java.sql.Statement;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import gg.jte.TemplateEngine;
-import gg.jte.output.Utf8ByteOutput;
-import io.undertow.server.HttpHandler;
 
 /**
  * Web interface class
