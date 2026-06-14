@@ -262,6 +262,21 @@ public final class BasicStructuresClass {
     }
 
     /**
+     * detects if current execution is from JAR or not
+     * @return boolean
+     */
+    public static boolean isRunningFromJar() {
+        // Get the URL of the current class's byte-code
+        final URL classUrl = ProjectClass.class.getResource("BasicStructuresClass.class");
+        if (classUrl == null) {
+            throw new IllegalStateException("Class resource not found");
+        }
+        // Check if the protocol is "jar" (JAR execution) or "file" (IDE execution)
+        final String protocol = classUrl.getProtocol();
+        return "jar".equals(protocol);
+    }
+
+    /**
      * List and Maps management
      */
     public static final class ListAndMapSubClass {

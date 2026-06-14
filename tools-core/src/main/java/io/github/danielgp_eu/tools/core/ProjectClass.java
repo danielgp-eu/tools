@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -227,21 +226,6 @@ public final class ProjectClass {
     }
 
     /**
-     * detects if current execution is from JAR or not
-     * @return boolean
-     */
-    public static boolean isRunningFromJar() {
-        // Get the URL of the current class's byte-code
-        final URL classUrl = ProjectClass.class.getResource("ProjectClass.class");
-        if (classUrl == null) {
-            throw new IllegalStateException("Class resource not found");
-        }
-        // Check if the protocol is "jar" (JAR execution) or "file" (IDE execution)
-        final String protocol = classUrl.getProtocol();
-        return "jar".equals(protocol);
-    }
-
-    /**
      * Load POM for current project
      */
     public static void loadProjectModel() {
@@ -271,7 +255,7 @@ public final class ProjectClass {
             final String strFeedback = String.format("External POM file %s is being considered!", externalPomFile);
             LogExposureClass.LOGGER.debug(strFeedback);
         }
-        if (isRunningFromJar()) {
+        if (BasicStructuresClass.isRunningFromJar()) {
             if (externalPomFile.isBlank()) {
                 pomFile = INTERNAL_POM;
             } else {

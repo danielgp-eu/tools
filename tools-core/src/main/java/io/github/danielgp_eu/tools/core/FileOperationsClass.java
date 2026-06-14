@@ -88,7 +88,7 @@ public final class FileOperationsClass {
          */
         public static String getFileContentIntoString(final String strFileName) {
             final String strOutput;
-            if (ProjectClass.isRunningFromJar()) {
+            if (BasicStructuresClass.isRunningFromJar()) {
                 strOutput = getJarIncludedFileContentIntoString(strFileName);
             } else {
                 strOutput = getDiskFileContentIntoString(strFileName);
@@ -739,7 +739,7 @@ public final class FileOperationsClass {
         public static long getInternalFileSize(final String strFilePath) {
             final String strFilePathDisk = ProjectClass.getCurrentFolder() + "/src/main/resources" + strFilePath;
             long fileSizeActual = getFileSizeIfFileExistsAndIsReadable(strFilePathDisk);
-            if (ProjectClass.isRunningFromJar()
+            if (BasicStructuresClass.isRunningFromJar()
                     || fileSizeActual < 0) {
                 try (InputStream inStream = Objects.requireNonNull(DatabaseOperationsClass.class.getResourceAsStream(strFilePath), "Resource not found: " + strFilePath)) {
                     // transferTo returns the number of bytes transferred (Java 9+)

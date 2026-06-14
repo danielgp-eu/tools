@@ -191,7 +191,7 @@ public final class DatabaseOperationsClass {
             final String strFeedbackErr = LogExposureClass.getUnsupportedFeatures(strFileName, StackWalker.getInstance().walk(frames -> frames.findFirst().map(frame -> frame.getClassName() + "." + frame.getMethodName()).orElse(LogExposureClass.STR_I18N_UNKN)));
             throw new UnsupportedOperationException(strFeedbackErr);
         }
-        if (!ProjectClass.isRunningFromJar()) {
+        if (!BasicStructuresClass.isRunningFromJar()) {
             strFilePath = ProjectClass.getCurrentFolder() + "/src/main/resources" + strFilePath;
         }
         return FileOperationsClass.ContentReadingSubClass.getFileContentIntoString(strFilePath);
