@@ -3,12 +3,13 @@
  *
  * Licensed under the Mozilla Public License Version 2.0 (the "License");
  *
- * MPL 2.0 is a copyleft license that is easy to comply with.
+ * MPL 2.0 is a copy-left license that is easy to comply with.
  * You must make the source code for any of your changes available under MPL,
  *   but you can combine the MPL software with proprietary code,
  *   as long as you keep the MPL code in separate files.
  * Version 2.0 is, by default, compatible with LGPL and GPL version 2 or greater.
- * You can distribute binaries under a proprietary license, as long as you make the source available under MPL.
+ * You can distribute binaries under a proprietary license,
+ *   as long as you make the source available under MPL.
  */
 package io.github.danielgp_eu.tools.core;
 

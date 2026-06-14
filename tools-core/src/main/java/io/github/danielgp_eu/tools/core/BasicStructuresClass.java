@@ -1,9 +1,23 @@
+/*
+ * Copyright 2026 Daniel-Gheorghe Popiniuc
+ *
+ * Licensed under the Mozilla Public License Version 2.0 (the "License");
+ *
+ * MPL 2.0 is a copy-left license that is easy to comply with.
+ * You must make the source code for any of your changes available under MPL,
+ *   but you can combine the MPL software with proprietary code,
+ *   as long as you keep the MPL code in separate files.
+ * Version 2.0 is, by default, compatible with LGPL and GPL version 2 or greater.
+ * You can distribute binaries under a proprietary license,
+ *   as long as you make the source available under MPL.
+ */
 package io.github.danielgp_eu.tools.core;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.security.MessageDigest;
