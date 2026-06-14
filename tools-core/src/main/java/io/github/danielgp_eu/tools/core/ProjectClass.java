@@ -130,12 +130,10 @@ public final class ProjectClass {
         String finalValue = rawValue;
         if (rawValue == null || rawValue.isBlank()) {
             finalValue = "";
-        } else if (rawValue.startsWith("${")
-                && rawValue.endsWith("}")) {
+        } else if (isStringOneVariable(rawValue)) {
             try {
                 finalValue = prjInterpolator.interpolate(rawValue);
-                if (finalValue.startsWith("${")
-                        && finalValue.endsWith("}")) {
+                if (isStringOneVariable(finalValue)) {
                     finalValue = prjParentInterpolator.interpolate(finalValue);
                 }
             } catch (InterpolationException e) {
@@ -174,13 +172,26 @@ public final class ProjectClass {
             final String strFeedback2 = String.format("As initial version was NULL I re-picked version from parent and is %s", prjVersion);
             LogExposureClass.LOGGER.debug(strFeedback2);
         }
-        if (prjVersion.startsWith("${")
-                && prjVersion.endsWith("}")) {
+        if (isStringOneVariable(prjVersion)) {
             prjVersion = getProjectModelValueWithInterpolationIfNeeded(prjVersion);
             final String strFeedback3 = String.format("Final interpolated version is %s", prjVersion);
             LogExposureClass.LOGGER.debug(strFeedback3);
         }
         return prjVersion;
+    }
+
+    /**
+     * check if string follows a pattern
+     * @param inString input String
+     * @return true/false
+     */
+    private static boolean isStringOneVariable(final String inString) {
+        boolean bolReturn = false;
+        if (inString.startsWith("${")
+                && inString.endsWith("}")) {
+            bolReturn = true;
+        }
+        return bolReturn;
     }
 
     /**
