@@ -11,7 +11,7 @@
  * You can distribute binaries under a proprietary license,
  *   as long as you make the source available under MPL.
  */
-package io.github.danielgp_eu.tools.core;
+package io.github.danielgp_eu.tools.incubator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +36,11 @@ import org.jspecify.annotations.NonNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import io.github.danielgp_eu.tools.core.BasicStructuresClass;
+import io.github.danielgp_eu.tools.core.LogExposureClass;
+import io.github.danielgp_eu.tools.core.RegularExpressionsClass;
+import io.github.danielgp_eu.tools.core.TimingClass;
 
 /**
  * XML management

@@ -11,7 +11,7 @@
  * You can distribute binaries under a proprietary license,
  *   as long as you make the source available under MPL.
  */
-package io.github.danielgp_eu.tools.core;
+package io.github.danielgp_eu.tools.incubator;
 
 import static java.lang.Math.*;
 
@@ -25,6 +25,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Properties;
+
+import io.github.danielgp_eu.tools.core.BasicStructuresClass;
+import io.github.danielgp_eu.tools.core.LogExposureClass;
+import io.github.danielgp_eu.tools.core.TimingClass;
 
 /**
  * Sun position class
