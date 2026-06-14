@@ -121,10 +121,12 @@ public final class ProjectClass {
      */
     private static Model getProjectModelFromInsideJar(final MavenXpp3Reader reader, final String pomReference) {
         Model model = null;
-        try (InputStream inputStream = ProjectClass.class.getResourceAsStream(pomReference)) {
-            model = reader.read(inputStream);
-        } catch (IOException | XmlPullParserException ex) {
-            LogExposureClass.exposeProjectModel(Arrays.toString(ex.getStackTrace()));
+        if (pomReference != null) {
+            try (InputStream inputStream = ProjectClass.class.getResourceAsStream(pomReference)) {
+                model = reader.read(inputStream);
+            } catch (IOException | XmlPullParserException ex) {
+                LogExposureClass.exposeProjectModel(Arrays.toString(ex.getStackTrace()));
+            }
         }
         return model;
     }
