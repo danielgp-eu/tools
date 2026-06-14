@@ -41,6 +41,7 @@ import picocli.CommandLine.Mixin;
     name = "top",
     subcommands = {
             AnalyzeColumnsFromCsvFiles.class,
+            CalculateSunriseAndSunset.class,
             CaptureChecksumsOfFilesFromFoldersIntoCsvFile.class,
             CaptureEnvironmentDetailsIntoJsonFile.class,
             CaptureImportsFromJavaSourceFilesIntoCsvFile.class,
@@ -122,6 +123,76 @@ class AnalyzeColumnsFromCsvFiles implements Runnable {
      */
     protected AnalyzeColumnsFromCsvFiles() {
         // intentionally blank
+    }
+
+}
+
+/**
+ * clean files older than a given number of days
+ */
+@CommandLine.Command(name = "CalculateSunriseAndSunset",
+                     description = "Calculates Sunrise and Sunset for one or more location")
+class CalculateSunriseAndSunset implements Runnable {
+
+    /**
+     * option for Longitude
+     */
+    @CommandLine.Option(
+            names = {"-lon", "--longitude"},
+            description = "Longitude",
+            arity = BasicStructuresClass.ARITY_ONE_OR_MORE,
+            required = true)
+    private double[] dblLongitude;
+
+    /**
+     * option for Latitude
+     */
+    @CommandLine.Option(
+            names = {"-lat", "--latitude"},
+            description = "Latitude",
+            arity = BasicStructuresClass.ARITY_ONE_OR_MORE,
+            required = true)
+    private double[] dblLatitude;
+
+    /**
+     * option for Zone Name
+     */
+    @CommandLine.Option(
+            names = {"-zn", "--zoneName"},
+            description = "Zone Name",
+            arity = BasicStructuresClass.ARITY_ONE_OR_MORE,
+            required = true)
+    private String[] strZoneName;
+
+    /**
+     * option for Zone Name
+     */
+    @CommandLine.Option(
+            names = {"-ld", "--locationDetail"},
+            description = "Location details: name,country,division,town",
+            arity = BasicStructuresClass.ARITY_ONE_OR_MORE,
+            required = true)
+    private String[] strLocationDetail;
+
+    @Override
+    public void run() {
+        int intCounter = 0;
+        for (final String crtLocationDetail : strLocationDetail) {
+            SunClass.setZoneId(strZoneName[intCounter]);
+            SunClass.setLatitude(dblLatitude[intCounter]);
+            SunClass.setLongitude(dblLongitude[intCounter]);
+            final Properties crtProperties = SunClass.getSunRiseAndSet(crtLocationDetail);
+            final String strFeedback = String.format("Details are: %s", crtProperties);
+            LogExposureClass.LOGGER.debug(strFeedback);
+            intCounter++;
+        }
+    }
+
+    /**
+     * Constructor
+     */
+    protected CalculateSunriseAndSunset() {
+        super();
     }
 
 }

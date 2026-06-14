@@ -11,7 +11,7 @@
  * You can distribute binaries under a proprietary license,
  *   as long as you make the source available under MPL.
  */
-package io.github.danielgp_eu.tools.incubator;
+package io.github.danielgp_eu.tools.utils;
 
 import static java.lang.Math.*;
 
