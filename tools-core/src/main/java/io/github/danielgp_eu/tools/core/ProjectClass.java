@@ -57,6 +57,8 @@ public final class ProjectClass {
     private static Model prjModel;
     /** current Project Parent Model */
     private static Model prjParentModel;
+    /** current Project GroupId */
+    private static String prjGroupId;
 
     /**
      * retrieving first Developer within Project Model
@@ -96,34 +98,22 @@ public final class ProjectClass {
     }
 
     /**
-     * get Project Model
+     * get Project Model content
      * @param reader class for reading XML
      * @param pomReference string for Project Object Model location
      * @return Model object
      */
-    private static Model getProjectModelFromSystem(final MavenXpp3Reader reader, final String pomReference) {
+    private static Model getProjectModelContent(final MavenXpp3Reader reader, final String pomReference) {
         Model model = null;
         if (pomReference != null) {
-            try(BufferedReader bReader = Files.newBufferedReader(Path.of(pomReference), StandardCharsets.UTF_8)) {
-                model = reader.read(bReader);
-            } catch (IOException | XmlPullParserException ex) {
-                LogExposureClass.exposeProjectModel(Arrays.toString(ex.getStackTrace()));
-            }
-        }
-        return model;
-    }
-
-    /**
-     * get Project Model
-     * @param reader class for reading XML files
-     * @param pomReference string for Project Object Model location
-     * @return Model object
-     */
-    private static Model getProjectModelFromInsideJar(final MavenXpp3Reader reader, final String pomReference) {
-        Model model = null;
-        if (pomReference != null) {
-            try (InputStream inputStream = ProjectClass.class.getResourceAsStream(pomReference)) {
-                model = reader.read(inputStream);
+            try {
+                if (Files.exists(Path.of(pomFile))) {
+                    final BufferedReader bReader = Files.newBufferedReader(Path.of(pomReference), StandardCharsets.UTF_8);
+                    model = reader.read(bReader);
+                } else {
+                    final InputStream inputStream = ProjectClass.class.getResourceAsStream(pomReference);
+                    model = reader.read(inputStream);
+                }
             } catch (IOException | XmlPullParserException ex) {
                 LogExposureClass.exposeProjectModel(Arrays.toString(ex.getStackTrace()));
             }
@@ -198,13 +188,9 @@ public final class ProjectClass {
      */
     public static void loadProjectModel() {
         final MavenXpp3Reader reader = new MavenXpp3Reader();
-        if (Files.exists(Path.of(pomFile))) {
-            prjModel = getProjectModelFromSystem(reader, pomFile);
-            prjParentModel = getProjectModelFromSystem(reader, pomParentFile);
-        } else {
-            prjModel = getProjectModelFromInsideJar(reader, pomFile);
-            prjParentModel = getProjectModelFromInsideJar(reader, pomParentFile);
-        }
+        prjModel = getProjectModelContent(reader, pomFile);
+        prjParentModel = getProjectModelContent(reader, pomParentFile);
+        prjGroupId = prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId();
         LoaderSubClass.loadComponents();
     }
 
@@ -243,7 +229,7 @@ public final class ProjectClass {
             final Model prjModel = getProjectModel();
             final StringBuilder strJsonString = new StringBuilder(100);
             strJsonString.append("\"Application\":{\"")
-                    .append(prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId())
+                    .append(prjGroupId)
                     .append(':')
                     .append(prjModel.getArtifactId())
                     .append("\":\"")
@@ -284,7 +270,7 @@ public final class ProjectClass {
             final Map<String, Object> appDetails = new ConcurrentHashMap<>();
             final Model prjModel = getProjectModel();
             appDetails.put("Application - "
-                    + (prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId())
+                    + prjGroupId
                     + ":" + prjModel.getArtifactId(),
                     getProjectVersion(prjModel));
             final Map<String, Object> projDependencies = ComponentsSubClass.getProjectModelComponent(BasicStructuresClass.STR_DEPENDENCIES);
@@ -332,7 +318,7 @@ public final class ProjectClass {
                 strJsonModule.append("{\"POM\":\"")
                         .append(crtModulePom.replace("\\", "\\\\"))
                         .append("\",\"")
-                        .append(prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId())
+                        .append(prjGroupId)
                         .append(':')
                         .append(prjModuleModel.getArtifactId())
                         .append("\":\"")
