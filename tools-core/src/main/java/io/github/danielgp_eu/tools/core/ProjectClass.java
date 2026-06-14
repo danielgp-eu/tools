@@ -46,10 +46,6 @@ public final class ProjectClass {
     /**
      * special value
      */
-    private static final String GLOBAL_VERSION = "${project.version}";
-    /**
-     * special value
-     */
     private static final String INTERNAL_POM = "/pom.xml";
     /**
      * holder of Managed Versions
@@ -163,8 +159,6 @@ public final class ProjectClass {
         String finalValue = rawValue;
         if (rawValue == null || rawValue.isBlank()) {
             finalValue = "";
-        } else if (GLOBAL_VERSION.equals(rawValue)) {
-            finalValue = prjModel.getVersion();
         } else if (rawValue.startsWith("${")
                 && rawValue.endsWith("}")) {
             try {
