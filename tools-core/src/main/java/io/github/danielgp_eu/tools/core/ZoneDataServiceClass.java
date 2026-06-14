@@ -97,8 +97,6 @@ public final class ZoneDataServiceClass {
         final Collection<ZoneInfoRecord> allTimeZones = getAll();
         // ensure current user time-zone is also populated
         final String crtUserTimeZone = System.getProperty("user.timezone");
-        final String strFeedback = String.format("Your time zone is %s", crtUserTimeZone);
-        LogExposureClass.LOGGER.info(strFeedback);
         if (crtUserTimeZone != null
                 && !SUPPORTED_TZ.contains(crtUserTimeZone)
                 && allTimeZones.stream().anyMatch(z -> z.zoneId().equals(crtUserTimeZone))) {
