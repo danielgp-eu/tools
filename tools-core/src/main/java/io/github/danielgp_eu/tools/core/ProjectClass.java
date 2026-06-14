@@ -39,33 +39,19 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  * Project related goodies
  */
 public final class ProjectClass {
-    /**
-     * External POM file to be considered (Optional)
-     */
+    /** External POM file to be considered (Optional) */
     private static String externalPomFile = "";
-    /**
-     * special value
-     */
+    /** special value */
     private static final String INTERNAL_POM = "/pom.xml";
-    /**
-     * holder of Managed Versions
-     */
+    /** holder of Managed Versions */
     private static Map<String, Object> managedVersions;
-    /**
-     * holder of Plugin Management Versions
-     */
+    /** holder of Plugin Management Versions */
     private static Map<String, Object> pluginCentralVers;
-    /**
-     * working POM file as String
-     */
+    /** working POM file as String */
     private static String pomFile;
-    /**
-     * current Project Model Interpolator
-     */
+    /** current Project Model Interpolator */
     private static StringSearchInterpolator prjInterpolator;
-    /**
-     * current Project Model
-     */
+    /** current Project Model */
     private static Model prjModel;
 
     /**
