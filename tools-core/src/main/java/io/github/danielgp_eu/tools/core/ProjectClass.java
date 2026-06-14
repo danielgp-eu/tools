@@ -40,7 +40,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  */
 public final class ProjectClass {
     /** constant for variable building */
-    private static String STR_VARIABLE = "${%s.version}";
+    private static String variablePattern = "${%s.version}";
     /** holder of Managed Versions */
     private static Map<String, Object> managedVersions;
     /** holder of Plugin Management Versions */
@@ -476,7 +476,7 @@ public final class ProjectClass {
                 final String rawVersion = plugin.getVersion();
                 String strVersion;
                 if (rawVersion == null) {
-                    final String strVariable = String.format(STR_VARIABLE, plugin.getArtifactId());
+                    final String strVariable = String.format(variablePattern, plugin.getArtifactId());
                     strVersion = getProjectModelValueWithInterpolationIfNeeded(strVariable);
                 } else {
                     strVersion = getProjectModelValueWithInterpolationIfNeeded(rawVersion);
@@ -486,7 +486,7 @@ public final class ProjectClass {
                             && pluginCentralVers != null
                             && !pluginCentralVers.isEmpty()) {
                         strVersion = pluginCentralVers.getOrDefault(strKey, UNKNOWN).toString();
-                }
+                    }
                 }
                 mapToReturn.put(strKey, strVersion);
             });
@@ -504,7 +504,7 @@ public final class ProjectClass {
                 final String rawVersion = dependency.getVersion();
                 String strVersion;
                 if (rawVersion == null) {
-                    final String strVariable = String.format(STR_VARIABLE, dependency.getArtifactId());
+                    final String strVariable = String.format(variablePattern, dependency.getArtifactId());
                     strVersion = getProjectModelValueWithInterpolationIfNeeded(strVariable);
                 } else {
                     strVersion = getProjectModelValueWithInterpolationIfNeeded(dependency.getVersion());
@@ -532,7 +532,7 @@ public final class ProjectClass {
                         final String rawVersion = plugin.getVersion();
                         String strVersion;
                         if (rawVersion == null) {
-                            final String strVariable = String.format(STR_VARIABLE, plugin.getArtifactId());
+                            final String strVariable = String.format(variablePattern, plugin.getArtifactId());
                             strVersion = getProjectModelValueWithInterpolationIfNeeded(strVariable);
                         } else {
                             strVersion = getProjectModelValueWithInterpolationIfNeeded(rawVersion);

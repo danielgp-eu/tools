@@ -5,10 +5,10 @@
   <parent>
     <groupId>io.github.danielgp-eu</groupId>
     <artifactId>tools</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
   </parent>
   <artifactId>tools-utils</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <name>tools-utils</name>
   <description>Java wrapper classes to expose included features over command-line</description>
   <licenses>

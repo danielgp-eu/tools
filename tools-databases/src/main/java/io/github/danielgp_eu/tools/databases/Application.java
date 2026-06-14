@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Properties;
 
 import io.github.danielgp_eu.tools.core.BasicStructuresClass;
+import io.github.danielgp_eu.tools.core.CommonInteractiveClass;
 import io.github.danielgp_eu.tools.core.LogExposureClass;
+import io.github.danielgp_eu.tools.core.ProjectClass;
 import picocli.CommandLine;
 
 /**
@@ -18,10 +20,21 @@ import picocli.CommandLine;
             GetInformationFromDatabase.class
     }
 )
-public class Application 
-{
+public class Application {
+
+    /**
+     * Constructor
+     *
+     * @param args command-line arguments
+     */
     public static void main( String[] args ) {
-        System.out.println( "Hello World!" );
+        CommonInteractiveClass.setStartDateTime();
+        ProjectClass.setPomFile("/tools-databases-pom.xml");
+        CommonInteractiveClass.startMeUp();
+        // execute appropriate Command with provided arguments
+        final int iExitCode = new CommandLine(new Application()).execute(args);
+        CommonInteractiveClass.setExitCode(iExitCode);
+        CommonInteractiveClass.shutMeDown(args[0]);
     }
 }
 
