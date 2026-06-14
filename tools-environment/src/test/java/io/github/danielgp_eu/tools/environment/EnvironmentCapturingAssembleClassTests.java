@@ -20,7 +20,7 @@ class EnvironmentCapturingAssembleClassTests {
     @Test
     @DisplayName("Simple test to check if environment details gathering results returns a valid JSON")
     void testPackageCurrentEnvironmentDetailsIntoJson() {
-        ProjectClass.setPomFile("/tools-core-pom.xml");
+        ProjectClass.setPomFile("/tools-environment-pom.xml");
         final String handled = EnvironmentCapturingAssembleClass.packageCurrentEnvironmentDetailsIntoJson();
         final boolean isJsonValid = JsonOperationsClass.isJsonValid(handled);
         assertTrue(isJsonValid, String.format("JSON produced by environment gathering logic does not seem to be valid... %s", handled));
@@ -29,7 +29,7 @@ class EnvironmentCapturingAssembleClassTests {
     @Test
     @DisplayName("Check if environment details gathering results is not null")
     void testPackageCurrentEnvironmentDetailsIntoListOfProperties() {
-        ProjectClass.setPomFile("/tools-core-pom.xml");
+        ProjectClass.setPomFile("/tools-environment-pom.xml");
         final List<Properties> handled = EnvironmentCapturingAssembleClass.packageCurrentEnvironmentDetailsIntoListOfProperties();
         assertNotNull(handled, String.format("Environment gathering logic should not be null... %s", handled));
     }
