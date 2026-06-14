@@ -124,12 +124,14 @@ public final class FileOperationsClass {
             String strContent = null;
             final String strFeedback = String.format("Attempting to get content into a String from %s file...", strFileName);
             LogExposureClass.LOGGER.debug(strFeedback);
-            try (InputStream iStream = ContentReadingSubClass.class.getResourceAsStream(strFileName);
-                    InputStreamReader inputStreamReader = new InputStreamReader(iStream, StandardCharsets.UTF_8);
-                    BufferedReader bReader = new BufferedReader(inputStreamReader)) {
-                strContent = bReader.readAllAsString();
-                final String strFeedbackOk = String.format("I have successfully loaded entire content from %s file into stream...", strFileName);
-                LogExposureClass.LOGGER.debug(strFeedbackOk);
+            try (InputStream iStream = ContentReadingSubClass.class.getResourceAsStream(strFileName)) {
+                assert iStream != null;
+                try (InputStreamReader inputStreamReader = new InputStreamReader(iStream, StandardCharsets.UTF_8);
+                     BufferedReader bReader = new BufferedReader(inputStreamReader)) {
+                    strContent = bReader.readAllAsString();
+                    final String strFeedbackOk = String.format("I have successfully loaded entire content from %s file into stream...", strFileName);
+                    LogExposureClass.LOGGER.debug(strFeedbackOk);
+                }
             } catch (IOException ex) {
                 final String strFeedbackErr = String.format("Error \"%s\"", Arrays.toString(ex.getStackTrace()));
                 LogExposureClass.LOGGER.error(strFeedbackErr);
