@@ -99,7 +99,12 @@ public final class HtmlClass {
                 LogExposureClass.exposeProjectModel(Arrays.toString(ex.getStackTrace()));
             }
         }
-        return String.format("<div class=\"infoBox\" style=\"box-shadow: 0px 0px 3px 3px blue;font-size:0.7rem;padding:2px;text-align:left;\">File is %s, having as size of %s bytes, last modified time-stamp on %s with a checksum SHA-256 value of %s</div>", infoStrings[0], infoStrings[1], infoStrings[2], infoStrings[3]);
+        final String strTemplate = """
+<div class=\"infoBox\" style=\"box-shadow: 0px 0px 3px 3px blue;font-size:0.7rem;padding:2px;text-align:left;\">
+    File is %s, having as size of %s bytes, last modified time-stamp on %s with a checksum SHA-256 value of %s
+</div>
+""";
+        return String.format(strTemplate, infoStrings[0], infoStrings[1], infoStrings[2], infoStrings[3]);
     }
 
     /**
