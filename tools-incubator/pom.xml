@@ -42,7 +42,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.github.danielgp_eu.tools.web.Application</mainClass>
+                            <mainClass>io.github.danielgp_eu.tools.incubator.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -59,7 +59,8 @@
                         </goals>
                         <configuration>
                             <target name="copy-and-rename-pom">
-                                <copy file="${basedir}/pom.xml" tofile="${project.build.outputDirectory}/tools-incubator-pom.xml"/>
+                                <copy file="${basedir}/pom.xml"
+                                      tofile="${project.build.outputDirectory}/tools-incubator-pom.xml"/>
                             </target>
                         </configuration>
                     </execution>

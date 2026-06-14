@@ -55,7 +55,8 @@
                         </goals>
                         <configuration>
                             <target name="copy-and-rename-pom">
-                                <copy file="${basedir}/pom.xml" tofile="${project.build.outputDirectory}/tools-utils-pom.xml"/>
+                                <copy file="${basedir}/pom.xml"
+                                      tofile="${project.build.outputDirectory}/tools-utils-pom.xml"/>
                             </target>
                         </configuration>
                     </execution>
