@@ -78,22 +78,6 @@ public final class ProjectClass {
     }
 
     /**
-     * Getting current project folder
-     * @return application folder
-     */
-    public static String getCurrentFolder() {
-        String strAppFolder = "";
-        final File directory = new File(""); // parameter is empty
-        try {
-            strAppFolder = directory.getCanonicalPath();
-        } catch (IOException ex) {
-            final String strFeedback = String.format("Error encountered in getting folder... %s", Arrays.toString(ex.getStackTrace()));
-            LogExposureClass.LOGGER.error(strFeedback);
-        }
-        return strAppFolder;
-    }
-
-    /**
      * Getter for projectModel
      * @return Model
      */
@@ -235,7 +219,7 @@ public final class ProjectClass {
         } else {
             if (externalPomFile.isBlank()) {
                 final StringBuilder sbPom = new StringBuilder(100);
-                final String strPrjFolder = getCurrentFolder();
+                final String strPrjFolder = BasicStructuresClass.getCurrentFolder();
                 sbPom.append(strPrjFolder).append(File.separator).append("pom.xml");
                 pomFile = sbPom.toString();
             } else {

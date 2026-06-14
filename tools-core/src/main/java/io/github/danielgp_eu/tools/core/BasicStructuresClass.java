@@ -13,6 +13,7 @@
  */
 package io.github.danielgp_eu.tools.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -259,6 +260,22 @@ public final class BasicStructuresClass {
      */
     public static int countPositionalTypeParametersWithinQuery(final String inputString) {
         return RegularExpressionsClass.countOccurrences(inputString, "PositionalTypeParameters");
+    }
+
+    /**
+     * Getting current project folder
+     * @return application folder
+     */
+    public static String getCurrentFolder() {
+        String strAppFolder = "";
+        final File directory = new File(""); // parameter is empty
+        try {
+            strAppFolder = directory.getCanonicalPath();
+        } catch (IOException ex) {
+            final String strFeedback = String.format("Error encountered in getting folder... %s", Arrays.toString(ex.getStackTrace()));
+            LogExposureClass.LOGGER.error(strFeedback);
+        }
+        return strAppFolder;
     }
 
     /**

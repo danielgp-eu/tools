@@ -192,7 +192,7 @@ public final class DatabaseOperationsClass {
             throw new UnsupportedOperationException(strFeedbackErr);
         }
         if (!BasicStructuresClass.isRunningFromJar()) {
-            strFilePath = ProjectClass.getCurrentFolder() + "/src/main/resources" + strFilePath;
+            strFilePath = BasicStructuresClass.getCurrentFolder() + "/src/main/resources" + strFilePath;
         }
         return FileOperationsClass.ContentReadingSubClass.getFileContentIntoString(strFilePath);
     }
