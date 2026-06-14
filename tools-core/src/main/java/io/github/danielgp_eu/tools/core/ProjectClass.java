@@ -59,6 +59,8 @@ public final class ProjectClass {
     private static Model prjParentModel;
     /** current Project GroupId */
     private static String prjGroupId;
+    /** current Project GroupId Artifact and Version */
+    private static String grpArtifactVers;
 
     /**
      * retrieving first Developer within Project Model
@@ -203,6 +205,8 @@ public final class ProjectClass {
         prjParentModel = getProjectModelContent(reader, pomParentFile);
         prjGroupId = prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId();
         LoaderSubClass.loadComponents();
+        final String prjVersion = getProjectVersion(prjModel);
+        grpArtifactVers = String.format("\"%s:%s\":\"%s\"", prjGroupId, prjModel.getArtifactId(), prjVersion);
     }
 
     /**
@@ -239,13 +243,8 @@ public final class ProjectClass {
         public static String getApplicationDetails() {
             final Model prjModel = getProjectModel();
             final StringBuilder strJsonString = new StringBuilder(100);
-            strJsonString.append("\"Application\":{\"")
-                    .append(prjGroupId)
-                    .append(':')
-                    .append(prjModel.getArtifactId())
-                    .append("\":\"")
-                    .append(getProjectVersion(prjModel))
-                    .append('\"');
+            strJsonString.append("\"Application\":{")
+                    .append(grpArtifactVers);
             final Map<String, Object> projDependencies = ComponentsSubClass.getProjectModelComponent(BasicStructuresClass.STR_DEPENDENCIES);
             if (!projDependencies.isEmpty()) {
                 strJsonString.append(",\"Dependencies\":")
@@ -321,21 +320,10 @@ public final class ProjectClass {
                 }
                 setPomFile(crtModulePom);
                 loadProjectModel();
-                final Model prjModuleModel = getProjectModel();
-                String mdlVersion = prjModuleModel.getVersion();
-                if (mdlVersion == null) {
-                    mdlVersion = prjModel.getVersion();
-                }
                 strJsonModule.append("{\"POM\":\"")
                         .append(crtModulePom.replace("\\", "\\\\"))
-                        .append("\",\"")
-                        .append(prjGroupId)
-                        .append(':')
-                        .append(prjModuleModel.getArtifactId())
-                        .append("\":\"")
-                        .append(mdlVersion)
-                        .append('\"')
-                        ;
+                        .append("\",")
+                        .append(grpArtifactVers);
                 final Map<String, Object> mdlDependencies = ComponentsSubClass.getProjectModelComponent(BasicStructuresClass.STR_DEPENDENCIES);
                 if (!mdlDependencies.isEmpty()) {
                     strJsonModule.append(",\"Dependencies\":")
@@ -469,23 +457,8 @@ public final class ProjectClass {
         private static Map<String, Object> getBuildPlugins() {
             final Map<String, Object> mapToReturn = new ConcurrentHashMap<>();
             prjModel.getBuild().getPlugins().forEach(plugin -> {
-                final String strKey = plugin.getGroupId() + ":" + plugin.getArtifactId();
-                final String rawVersion = plugin.getVersion();
-                String strVersion;
-                if (rawVersion == null) {
-                    final String strVariable = String.format(variablePattern, plugin.getArtifactId());
-                    strVersion = getProjectModelValueWithInterpolationIfNeeded(strVariable);
-                } else {
-                    strVersion = getProjectModelValueWithInterpolationIfNeeded(rawVersion);
-                    if (strVersion.isEmpty()
-                            && managedVersions != null
-                            && !managedVersions.isEmpty()
-                            && pluginCentralVers != null
-                            && !pluginCentralVers.isEmpty()) {
-                        strVersion = pluginCentralVers.getOrDefault(strKey, UNKNOWN).toString();
-                    }
-                }
-                mapToReturn.put(strKey, strVersion);
+                final String[] strKeyAndVersion = getPluginKeyAndVersion(plugin);
+                mapToReturn.put(strKeyAndVersion[0], strKeyAndVersion[1]);
             });
             return mapToReturn;
         }
@@ -516,6 +489,26 @@ public final class ProjectClass {
             return mapToReturn;
         }
 
+        private static String[] getPluginKeyAndVersion(final Plugin inPlugin) {
+            final String strKey = inPlugin.getGroupId() + ":" + inPlugin.getArtifactId();
+            String[] strReturn = {strKey, ""};
+            final String rawVersion = inPlugin.getVersion();
+            if (rawVersion == null) {
+                final String strVariable = String.format(variablePattern, inPlugin.getArtifactId());
+                strReturn[1] = getProjectModelValueWithInterpolationIfNeeded(strVariable);
+            } else {
+                strReturn[1] = getProjectModelValueWithInterpolationIfNeeded(rawVersion);
+                if (strReturn[1].isEmpty()
+                        && managedVersions != null
+                        && !managedVersions.isEmpty()
+                        && pluginCentralVers != null
+                        && !pluginCentralVers.isEmpty()) {
+                    strReturn[1] = pluginCentralVers.getOrDefault(strReturn[0], UNKNOWN).toString();
+                }
+            }
+            return strReturn;
+        }
+
         /**
          * Profile Plugins gathering
          * @return Map
@@ -525,23 +518,8 @@ public final class ProjectClass {
             prjModel.getProfiles().forEach(profile -> {
                 if (profile.getBuild() != null) {
                     profile.getBuild().getPlugins().forEach(plugin -> {
-                        final String strKey = plugin.getGroupId() + ":" + plugin.getArtifactId();
-                        final String rawVersion = plugin.getVersion();
-                        String strVersion;
-                        if (rawVersion == null) {
-                            final String strVariable = String.format(variablePattern, plugin.getArtifactId());
-                            strVersion = getProjectModelValueWithInterpolationIfNeeded(strVariable);
-                        } else {
-                            strVersion = getProjectModelValueWithInterpolationIfNeeded(rawVersion);
-                            if (strVersion.isEmpty()
-                                    && managedVersions != null
-                                    && !managedVersions.isEmpty()
-                                    && pluginCentralVers != null
-                                    && !pluginCentralVers.isEmpty()) {
-                                strVersion = pluginCentralVers.getOrDefault(strKey, UNKNOWN).toString();
-                        }
-                        }
-                        mapToReturn.put(strKey, strVersion);
+                        final String[] strKeyAndVersion = getPluginKeyAndVersion(plugin);
+                        mapToReturn.put(strKeyAndVersion[0], strKeyAndVersion[1]);
                     });
                 }
             });
