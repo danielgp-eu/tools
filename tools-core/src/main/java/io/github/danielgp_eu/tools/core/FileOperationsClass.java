@@ -743,7 +743,7 @@ public final class FileOperationsClass {
             long fileSizeActual = getFileSizeIfFileExistsAndIsReadable(strFilePathDisk);
             if (BasicStructuresClass.isRunningFromJar()
                     || fileSizeActual < 0) {
-                try (InputStream inStream = Objects.requireNonNull(DatabaseOperationsClass.class.getResourceAsStream(strFilePath), "Resource not found: " + strFilePath)) {
+                try (InputStream inStream = Objects.requireNonNull(RetrievingSubClass.class.getResourceAsStream(strFilePath), "Resource not found: " + strFilePath)) {
                     // transferTo returns the number of bytes transferred (Java 9+)
                     fileSizeActual = inStream.transferTo(OutputStream.nullOutputStream());
                 } catch (IOException ei) {

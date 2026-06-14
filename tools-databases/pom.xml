@@ -9,10 +9,9 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>tools-web</artifactId>
-    <name>tools-web</name>
-    <description>Java wrapper classes to expose included features over a self-included web server based on
-    Undertow package</description>
+    <artifactId>tools-databases</artifactId>
+    <name>tools-databases</name>
+    <description>Java classes specialized to interface with various databases</description>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -26,9 +25,8 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.danielgp-eu</groupId>
-            <artifactId>tools-databases</artifactId>
-            <version>${revision}</version>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
         </dependency>
     </dependencies>
 
@@ -48,7 +46,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.github.danielgp_eu.tools.web.Application</mainClass>
+                            <mainClass>io.github.danielgp_eu.tools.databases.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -66,7 +64,7 @@
                         <configuration>
                             <target name="copy-and-rename-pom">
                                 <copy file="${basedir}/pom.xml"
-                                      tofile="${project.build.outputDirectory}/tools-web-pom.xml"/>
+                                      tofile="${project.build.outputDirectory}/tools-databases-pom.xml"/>
                             </target>
                         </configuration>
                     </execution>

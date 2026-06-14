@@ -16,6 +16,7 @@ package io.github.danielgp_eu.tools.web;
 import gg.jte.TemplateEngine;
 import gg.jte.output.Utf8ByteOutput;
 import io.github.danielgp_eu.tools.core.*;
+import io.github.danielgp_eu.tools.databases.DatabaseOperationsClass;
 import io.undertow.server.HttpHandler;
 
 import java.nio.file.Path;
@@ -119,9 +120,9 @@ public final class WebClass {
                     + HtmlClass.buildFileInfoBox(Path.of(ProjectClass.getPomFile()));
             case BasicStructuresClass.STR_FILE_HASHING  -> getFileHashingAsHtmlTable();
             case BasicStructuresClass.STR_SOFTWARE_RLS  -> getSoftwareReleasesIntoHtmlTable()
-                    + HtmlClass.SqLiteStatisticsSubClass.buildSqLiteFileInfoBox();
-            case BasicStructuresClass.STR_TS            -> HtmlClass.SqLiteStatisticsSubClass.getTableStatisticsAsHtmlTable()
-                    + HtmlClass.SqLiteStatisticsSubClass.buildSqLiteFileInfoBox();
+                    + DatabaseOperationsClass.SpecificSqLiteSubClass.SqLiteStatisticsSubClass.buildSqLiteFileInfoBox();
+            case BasicStructuresClass.STR_TS            -> DatabaseOperationsClass.SpecificSqLiteSubClass.SqLiteStatisticsSubClass.getTableStatisticsAsHtmlTable()
+                    + DatabaseOperationsClass.SpecificSqLiteSubClass.SqLiteStatisticsSubClass.buildSqLiteFileInfoBox();
             default                                     -> String.format("Welcome %s", System.getProperty("user.name"));
         });
     }

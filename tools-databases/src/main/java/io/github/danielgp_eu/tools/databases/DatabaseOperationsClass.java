@@ -11,10 +11,11 @@
  * You can distribute binaries under a proprietary license,
  *   as long as you make the source available under MPL.
  */
-package io.github.danielgp_eu.tools.core;
+package io.github.danielgp_eu.tools.databases;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,16 +26,20 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.sqlite.Function;
 
+import io.github.danielgp_eu.tools.core.BasicStructuresClass;
+import io.github.danielgp_eu.tools.core.FileOperationsClass;
+import io.github.danielgp_eu.tools.core.HtmlClass;
+import io.github.danielgp_eu.tools.core.JsonOperationsClass;
+import io.github.danielgp_eu.tools.core.LogExposureClass;
+import io.github.danielgp_eu.tools.core.ProjectClass;
+import io.github.danielgp_eu.tools.core.RegularExpressionsClass;
+import io.github.danielgp_eu.tools.core.ShellingClass;
+import io.github.danielgp_eu.tools.core.TimingClass;
 import tools.jackson.databind.JsonNode;
 
 /**
@@ -906,6 +911,76 @@ public final class DatabaseOperationsClass {
          */
         private SpecificSqLiteSubClass() {
             // empty constructor
+        }
+
+        /**
+         * List and Maps management
+         */
+        public static final class SqLiteStatisticsSubClass {
+
+            /**
+             * Build Information Box
+             * @return String
+             */
+            public static String buildSqLiteFileInfoBox() {
+                final Path fileName = Path.of(DatabaseOperationsClass.SpecificSqLiteSubClass.getInternalDatabase());
+                return HtmlClass.buildFileInfoBox(fileName);
+            }
+
+            /**
+             * read SQLite tables and their record count
+             * @return StringBuilder
+             */
+            private static StringBuilder buildTableRecordCounting() {
+                final String strQueryCount = DatabaseOperationsClass.getPreDefinedQuery(BasicStructuresClass.STR_SQLITE, "StatisticsTableRecordCounting");
+                final StringBuilder strQueryRaw = new StringBuilder(1000);
+                final List<Properties> resultTables = getTablesAndTheirSequence();
+                resultTables.forEach(objProperty -> {
+                    if (!strQueryRaw.isEmpty()) {
+                        strQueryRaw.append(" UNION ALL ");
+                    }
+                    strQueryRaw.append(String.format(strQueryCount,
+                            objProperty.get(BasicStructuresClass.STR_TABLE),
+                            objProperty.get("Sequence"),
+                            objProperty.get(BasicStructuresClass.STR_TABLE)));
+                });
+                return strQueryRaw;
+            }
+
+            /**
+             * read SQLite tables and their sequence
+             * @return List<Properties>
+             */
+            private static List<Properties> getTablesAndTheirSequence() {
+                final String queryTables = DatabaseOperationsClass.getPreDefinedQuery(BasicStructuresClass.STR_SQLITE, "StatisticsTablesAndTheirSequence");
+                final String strFeedback = String.format("Table list and their sequence query is: %s", queryTables);
+                LogExposureClass.LOGGER.debug(strFeedback);
+                return DatabaseOperationsClass.SpecificSqLiteSubClass.getSqLiteResultSetValues("Table list and their sequence", queryTables);
+            }
+
+            /**
+             * Outputs table statistics into an HTML table
+             * @return String
+             */
+            public static String getTableStatisticsAsHtmlTable() {
+                final StringBuilder queryRecordCount = buildTableRecordCounting();
+                final String queryTableStats = DatabaseOperationsClass.getPreDefinedQuery(BasicStructuresClass.STR_SQLITE, "StatisticsTables");
+                final String strFinalQuery =  String.format(queryTableStats, queryRecordCount);
+                final List<Properties> resultTableStats = DatabaseOperationsClass.SpecificSqLiteSubClass.getSqLiteResultSetValues("Table Statistics", strFinalQuery);
+                final List<String> desiredOrder = List.of("#", BasicStructuresClass.STR_TABLE, "Records", "Sequence", "Gap");
+                final List<SequencedMap<Object, Object>> orderedList = resultTableStats.stream()
+                        .map(prop -> BasicStructuresClass.ListAndMapSubClass.sortProperties(prop, desiredOrder))
+                        .toList();
+                return HtmlClass.TableSubClass.getListOfSequencedMapIntoHtmlTable(orderedList, new Properties());
+            }
+
+            /**
+             * constructor
+             */
+            private SqLiteStatisticsSubClass() {
+                // intentionally left blank
+            }
+
         }
 
     }

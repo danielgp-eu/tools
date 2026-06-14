@@ -15,6 +15,7 @@ package io.github.danielgp_eu.tools.web;
 
 
 import io.github.danielgp_eu.tools.core.*;
+import io.github.danielgp_eu.tools.databases.DatabaseOperationsClass;
 import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
 
