@@ -1,4 +1,17 @@
-package io.github.danielgp_eu.tools.core;
+/*
+ * Copyright 2026 Daniel-Gheorghe Popiniuc
+ *
+ * Licensed under the Mozilla Public License Version 2.0 (the "License");
+ *
+ * MPL 2.0 is a copy-left license that is easy to comply with.
+ * You must make the source code for any of your changes available under MPL,
+ *   but you can combine the MPL software with proprietary code,
+ *   as long as you keep the MPL code in separate files.
+ * Version 2.0 is, by default, compatible with LGPL and GPL version 2 or greater.
+ * You can distribute binaries under a proprietary license,
+ *   as long as you make the source available under MPL.
+ */
+package io.github.danielgp_eu.tools.utils;
 
 import java.nio.file.Path;
 import java.time.Duration;
@@ -10,6 +23,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import io.github.danielgp_eu.tools.core.BasicStructuresClass;
+import io.github.danielgp_eu.tools.core.CommonInteractiveClass;
+import io.github.danielgp_eu.tools.core.DatabaseOperationsClass;
+import io.github.danielgp_eu.tools.core.EnvironmentCapturingAssembleClass;
+import io.github.danielgp_eu.tools.core.FileOperationsClass;
+import io.github.danielgp_eu.tools.core.LogExposureClass;
+import io.github.danielgp_eu.tools.core.ShellingClass;
+import io.github.danielgp_eu.tools.core.TimingClass;
 import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
 
@@ -20,7 +41,6 @@ import picocli.CommandLine.Mixin;
     name = "top",
     subcommands = {
             AnalyzeColumnsFromCsvFiles.class,
-            AnalyzePomFiles.class,
             CaptureChecksumsOfFilesFromFoldersIntoCsvFile.class,
             CaptureEnvironmentDetailsIntoJsonFile.class,
             CaptureImportsFromJavaSourceFilesIntoCsvFile.class,
@@ -30,29 +50,15 @@ import picocli.CommandLine.Mixin;
             GetSubFoldersFromFolders.class
     }
 )
-public final class ToolsClass {
-
-    /**
-     * Constructor empty
-     */
-    private ToolsClass() {
-        super();
-    }
-
-    /**
-     * Constructor
-     *
-     * @param args command-line arguments
-     */
-    /* default */ static void main(final String... args) {
+public class Application {
+    public static void main( String[] args ) {
         CommonInteractiveClass.setStartDateTime();
         CommonInteractiveClass.startMeUp();
         // execute appropriate Command with provided arguments
-        final int iExitCode = new CommandLine(new ToolsClass()).execute(args);
+        final int iExitCode = new CommandLine(new Application()).execute(args);
         CommonInteractiveClass.setExitCode(iExitCode);
         CommonInteractiveClass.shutMeDown(args[0]);
     }
-
 }
 
 /**
@@ -116,41 +122,6 @@ class AnalyzeColumnsFromCsvFiles implements Runnable {
      */
     protected AnalyzeColumnsFromCsvFiles() {
         // intentionally blank
-    }
-
-}
-
-/**
- * Captures sub-folder from a Given Folder into Log file
- */
-@CommandLine.Command(name = "AnalyzePomFiles",
-                     description = "Exposes information from one or multiple Project Object Model (Apache Maven configuration file)")
-class AnalyzePomFiles implements Runnable {
-    /**
-     * adds the options defined in 
-     * CommonInteractiveClass.FileNameOptionMixinClass to this command
-     */
-    @Mixin
-    private final CommonInteractiveClass.InFileNameOptionMixinClass optFileNames = new CommonInteractiveClass.InFileNameOptionMixinClass();
-
-    @Override
-    public void run() {
-        final String strFeedbackThis = String.format("For this project relevant POM information is: {%s}", ProjectClass.ApplicationSubClass.getApplicationDetails());
-        LogExposureClass.LOGGER.info(strFeedbackThis);
-        final String[] inFiles = optFileNames.getInFileNames();
-        for (final String strFileName : inFiles) {
-            ProjectClass.setPomFile(strFileName);
-            ProjectClass.loadProjectModel();
-            final String strFeedback = String.format("For given POM file %s relevant information is: {%s}", strFileName, ProjectClass.ApplicationSubClass.getApplicationDetails());
-            LogExposureClass.LOGGER.info(strFeedback);
-        }
-    }
-
-    /**
-     * Private constructor to prevent instantiation
-     */
-    protected AnalyzePomFiles() {
-        super();
     }
 
 }

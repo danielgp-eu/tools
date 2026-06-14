@@ -47,6 +47,7 @@
         <module>tools-archiving</module>
         <module>tools-json_split</module>
         <module>tools-incubator</module>
+        <module>tools-utils</module>
         <module>tools-web</module>
     </modules>
 

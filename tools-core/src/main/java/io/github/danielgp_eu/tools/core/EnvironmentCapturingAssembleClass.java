@@ -117,6 +117,21 @@ public final class EnvironmentCapturingAssembleClass {
     }
 
     /**
+     * Outputs file statistics into an HTML table
+     * @return String
+     */
+    public static String getEnvironmentDetailsAsHtmlTable() {
+        final Properties objFeatures = new Properties();
+        objFeatures.put(BasicStructuresClass.STR_NEW_TAB, "Category");
+        final List<Properties> envDetails = EnvironmentCapturingAssembleClass.packageCurrentEnvironmentDetailsIntoListOfProperties();
+        final List<String> desiredOrder = List.of("Category", "Element", "Value");
+        final List<SequencedMap<Object, Object>> orderedList = envDetails.stream()
+                .map(prop -> BasicStructuresClass.ListAndMapSubClass.sortProperties(prop, desiredOrder))
+                .toList();
+        return HtmlClass.TableSubClass.getListOfSequencedMapIntoHtmlTable(orderedList, objFeatures);
+    }
+
+    /**
      * Capturing user name
      * @param strInsteadOfNull alternative text if not found
      * @return String with user name

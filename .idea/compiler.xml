@@ -11,6 +11,7 @@
         <module name="tools-web" />
         <module name="tools-core" />
         <module name="tools-incubator" />
+        <module name="tools-utils" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

@@ -18,6 +18,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.github.danielgp-eu</groupId>
             <artifactId>tools-core</artifactId>
             <version>${revision}</version>

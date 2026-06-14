@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project    xmlns="http://maven.apache.org/POM/4.0.0"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                                 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,10 +9,9 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>tools-archiving</artifactId>
-    <name>tools-archiving</name>
-    <description>Java wrapper classes to archive one or multiple folders (using external 7za binary
-        executable relevant to the host system)</description>
+    <artifactId>tools-utils</artifactId>
+    <name>tools-utils</name>
+    <description>Java wrapper classes to expose included features over command-line</description>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -41,7 +38,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.github.danielgp_eu.tools.archiving.Application</mainClass>
+                            <mainClass>io.github.danielgp_eu.tools.utils.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -58,8 +55,7 @@
                         </goals>
                         <configuration>
                             <target name="copy-and-rename-pom">
-                                <copy file="${basedir}/pom.xml"
-                                      tofile="${project.build.outputDirectory}/tools-archiving-pom.xml"/>
+                                <copy file="${basedir}/pom.xml" tofile="${project.build.outputDirectory}/tools-utils-pom.xml"/>
                             </target>
                         </configuration>
                     </execution>

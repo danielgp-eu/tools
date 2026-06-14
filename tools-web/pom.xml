@@ -11,11 +11,15 @@
 
     <artifactId>tools-web</artifactId>
     <name>tools-web</name>
-    <description>Java wrapper classes to expose included features over a sel-included web server based on
+    <description>Java wrapper classes to expose included features over a self-included web server based on
     Undertow package</description>
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.github.danielgp-eu</groupId>
             <artifactId>tools-core</artifactId>

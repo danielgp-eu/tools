@@ -1,3 +1,16 @@
+/*
+ * Copyright 2026 Daniel-Gheorghe Popiniuc
+ *
+ * Licensed under the Mozilla Public License Version 2.0 (the "License");
+ *
+ * MPL 2.0 is a copy-left license that is easy to comply with.
+ * You must make the source code for any of your changes available under MPL,
+ *   but you can combine the MPL software with proprietary code,
+ *   as long as you keep the MPL code in separate files.
+ * Version 2.0 is, by default, compatible with LGPL and GPL version 2 or greater.
+ * You can distribute binaries under a proprietary license,
+ *   as long as you make the source available under MPL.
+ */
 package io.github.danielgp_eu.tools.web;
 
 import gg.jte.TemplateEngine;
@@ -57,21 +70,6 @@ public final class WebClass {
      * Outputs file statistics into an HTML table
      * @return String
      */
-    public static String getEnvironmentDetailsAsHtmlTable() {
-        final Properties objFeatures = new Properties();
-        objFeatures.put(BasicStructuresClass.STR_NEW_TAB, "Category");
-        final List<Properties> envDetails = EnvironmentCapturingAssembleClass.packageCurrentEnvironmentDetailsIntoListOfProperties();
-        final List<String> desiredOrder = List.of("Category", "Element", "Value");
-        final List<SequencedMap<Object, Object>> orderedList = envDetails.stream()
-                .map(prop -> BasicStructuresClass.ListAndMapSubClass.sortProperties(prop, desiredOrder))
-                .toList();
-        return HtmlClass.TableSubClass.getListOfSequencedMapIntoHtmlTable(orderedList, objFeatures);
-    }
-
-    /**
-     * Outputs file statistics into an HTML table
-     * @return String
-     */
     private static String getFileHashingAsHtmlTable() {
         final String[] inAlgorithms = {"SHA-256"};
         FileOperationsClass.StatisticsSubClass.setChecksumAlgorithms(inAlgorithms);
@@ -117,13 +115,13 @@ public final class WebClass {
     public static gg.jte.Content handleBodyContent() {
         final String page = UndertowClass.ParametersSubClass.getPageParameter();
         return output -> output.writeContent(switch(page) {
-            case BasicStructuresClass.STR_ENV_DTLS      -> getEnvironmentDetailsAsHtmlTable()
+            case BasicStructuresClass.STR_ENV_DTLS      -> EnvironmentCapturingAssembleClass.getEnvironmentDetailsAsHtmlTable()
                     + HtmlClass.buildFileInfoBox(Path.of(ProjectClass.getPomFile()));
             case BasicStructuresClass.STR_FILE_HASHING  -> getFileHashingAsHtmlTable();
             case BasicStructuresClass.STR_SOFTWARE_RLS  -> getSoftwareReleasesIntoHtmlTable()
-                    + SqLiteStatisticsSubClass.buildSqLiteFileInfoBox();
-            case BasicStructuresClass.STR_TS            -> SqLiteStatisticsSubClass.getTableStatisticsAsHtmlTable()
-                    + SqLiteStatisticsSubClass.buildSqLiteFileInfoBox();
+                    + HtmlClass.SqLiteStatisticsSubClass.buildSqLiteFileInfoBox();
+            case BasicStructuresClass.STR_TS            -> HtmlClass.SqLiteStatisticsSubClass.getTableStatisticsAsHtmlTable()
+                    + HtmlClass.SqLiteStatisticsSubClass.buildSqLiteFileInfoBox();
             default                                     -> String.format("Welcome %s", System.getProperty("user.name"));
         });
     }
@@ -262,76 +260,6 @@ public final class WebClass {
         // Private constructor to prevent instantiation
         private SoftwareReleasesSubClass() {
             // intentional empty
-        }
-
-    }
-
-    /**
-     * List and Maps management
-     */
-    public static final class SqLiteStatisticsSubClass {
-
-        /**
-         * Build Information Box
-         * @return String
-         */
-        private static String buildSqLiteFileInfoBox() {
-            final Path fileName = Path.of(DatabaseOperationsClass.SpecificSqLiteSubClass.getInternalDatabase());
-            return HtmlClass.buildFileInfoBox(fileName);
-        }
-
-        /**
-         * read SQLite tables and their record count
-         * @return StringBuilder
-         */
-        private static StringBuilder buildTableRecordCounting() {
-            final String strQueryCount = DatabaseOperationsClass.getPreDefinedQuery(BasicStructuresClass.STR_SQLITE, "StatisticsTableRecordCounting");
-            final StringBuilder strQueryRaw = new StringBuilder(1000);
-            final List<Properties> resultTables = getTablesAndTheirSequence();
-            resultTables.forEach(objProperty -> {
-                if (!strQueryRaw.isEmpty()) {
-                    strQueryRaw.append(" UNION ALL ");
-                }
-                strQueryRaw.append(String.format(strQueryCount,
-                        objProperty.get(BasicStructuresClass.STR_TABLE),
-                        objProperty.get("Sequence"),
-                        objProperty.get(BasicStructuresClass.STR_TABLE)));
-            });
-            return strQueryRaw;
-        }
-
-        /**
-         * read SQLite tables and their sequence
-         * @return List<Properties>
-         */
-        private static List<Properties> getTablesAndTheirSequence() {
-            final String queryTables = DatabaseOperationsClass.getPreDefinedQuery(BasicStructuresClass.STR_SQLITE, "StatisticsTablesAndTheirSequence");
-            final String strFeedback = String.format("Table list and their sequence query is: %s", queryTables);
-            LogExposureClass.LOGGER.debug(strFeedback);
-            return DatabaseOperationsClass.SpecificSqLiteSubClass.getSqLiteResultSetValues("Table list and their sequence", queryTables);
-        }
-
-        /**
-         * Outputs table statistics into an HTML table
-         * @return String
-         */
-        public static String getTableStatisticsAsHtmlTable() {
-            final StringBuilder queryRecordCount = buildTableRecordCounting();
-            final String queryTableStats = DatabaseOperationsClass.getPreDefinedQuery(BasicStructuresClass.STR_SQLITE, "StatisticsTables");
-            final String strFinalQuery =  String.format(queryTableStats, queryRecordCount);
-            final List<Properties> resultTableStats = DatabaseOperationsClass.SpecificSqLiteSubClass.getSqLiteResultSetValues("Table Statistics", strFinalQuery);
-            final List<String> desiredOrder = List.of("#", BasicStructuresClass.STR_TABLE, "Records", "Sequence", "Gap");
-            final List<SequencedMap<Object, Object>> orderedList = resultTableStats.stream()
-                    .map(prop -> BasicStructuresClass.ListAndMapSubClass.sortProperties(prop, desiredOrder))
-                    .toList();
-            return HtmlClass.TableSubClass.getListOfSequencedMapIntoHtmlTable(orderedList, new Properties());
-        }
-
-        /**
-         * constructor
-         */
-        private SqLiteStatisticsSubClass() {
-            // intentionally left blank
         }
 
     }
