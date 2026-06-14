@@ -21,6 +21,7 @@ class HtmlClassTests {
     @Test
     @DisplayName("buildApplicationDetail should be returned as String")
     void buildApplicationDetail() {
+        ProjectClass.setPomFile("/tools-core-pom.xml");
         final String appDetail = HtmlClass.buildApplicationDetail();
         assertTrue(appDetail.contains(" &copy; by "), "Application detail should have Copyright symbol followed by");
     }

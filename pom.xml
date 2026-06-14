@@ -61,8 +61,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <sonar.organization>danielgp-eu</sonar.organization>
-        <!-- Dependency & Plugin versions -->
-        <jacoco.version>0.8.15</jacoco.version>
         <!-- Dependency versions -->
         <jackson.version>3.2.0</jackson.version>
         <jspecify.version>1.0.0</jspecify.version>
@@ -78,6 +76,7 @@
         <!-- Build Plugin versions -->
         <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
         <dependency-check-maven.version>12.2.2</dependency-check-maven.version>
+        <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
@@ -152,15 +151,6 @@
                 <artifactId>plexus-interpolation</artifactId>
                 <version>${plexus-interpolation.version}</version>
                 <scope>compile</scope>
-            </dependency>
-            <!-- Source: https://www.jacoco.org/ -->
-            <!-- Binaries: https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent -->
-            <!-- Description: JaCoCo Agent (aka Java Code Coverage) -->
-            <dependency>
-                <groupId>org.jacoco</groupId>
-                <artifactId>org.jacoco.agent</artifactId>
-                <version>${jacoco.version}</version>
-                <scope>test</scope>
             </dependency>
             <!-- Source: https://jspecify.dev/ -->
             <!-- Binaries: https://repo1.maven.org/maven2/org/jspecify/jspecify -->
@@ -326,7 +316,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.version}</version>
+                    <version>${jacoco-maven-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>default-prepare-agent</id>

@@ -10,6 +10,7 @@
         <module name="tools-json_split" />
         <module name="tools-web" />
         <module name="tools-core" />
+        <module name="tools-incubator" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

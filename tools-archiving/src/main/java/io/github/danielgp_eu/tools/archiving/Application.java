@@ -30,7 +30,7 @@ public final class Application {
      */
     static void main( final String[] args ) {
         CommonInteractiveClass.setStartDateTime();
-        ProjectClass.setExternalPomFile("/tools-archiving-pom.xml");
+        ProjectClass.setPomFile("/tools-archiving-pom.xml");
         CommonInteractiveClass.startMeUp();
         // execute appropriate Command with provided arguments
         final int iExitCode = new CommandLine(new Application()).execute(args);

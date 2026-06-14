@@ -22,7 +22,7 @@ public class Application {
      */
     /* default */ static void main(final String... args) {
         CommonInteractiveClass.setStartDateTime();
-        ProjectClass.setExternalPomFile("/tools-web-pom.xml");
+        ProjectClass.setPomFile("/tools-web-pom.xml");
         CommonInteractiveClass.startMeUp();
         // execute appropriate Command with provided arguments
         final int iExitCode = new CommandLine(new Application()).execute(args);

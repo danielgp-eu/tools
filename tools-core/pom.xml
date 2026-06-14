@@ -46,11 +46,6 @@
             <artifactId>plexus-interpolation</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.agent</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
         </dependency>
@@ -94,6 +89,19 @@
                                 <get src="https://data.iana.org/time-zones/data/zone1970.tab"
                                      dest="${project.basedir}/src/main/resources/time_zones/zone1970.tab"
                                      skipexisting="true" />
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-parent-pom-as-metadata</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target name="copy-and-rename-pom">
+                                <copy file="${basedir}/../pom.xml"
+                                      tofile="${project.build.outputDirectory}/tools-pom.xml"/>
                             </target>
                         </configuration>
                     </execution>

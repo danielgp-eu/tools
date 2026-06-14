@@ -39,20 +39,22 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  * Project related goodies
  */
 public final class ProjectClass {
-    /** External POM file to be considered (Optional) */
-    private static String externalPomFile = "";
-    /** special value */
-    private static final String INTERNAL_POM = "/pom.xml";
     /** holder of Managed Versions */
     private static Map<String, Object> managedVersions;
     /** holder of Plugin Management Versions */
     private static Map<String, Object> pluginCentralVers;
     /** working POM file as String */
     private static String pomFile;
+    /** working parent POM file as String */
+    private static String pomParentFile;
     /** current Project Model Interpolator */
     private static StringSearchInterpolator prjInterpolator;
+    /** current Project Model Interpolator */
+    private static StringSearchInterpolator prjParentInterpolator;
     /** current Project Model */
     private static Model prjModel;
+    /** current Project Parent Model */
+    private static Model prjParentModel;
 
     /**
      * retrieving first Developer within Project Model
@@ -65,6 +67,9 @@ public final class ProjectClass {
         if (prjDevs != null
             && !prjDevs.isEmpty()) {
                 prjFirstDeveloper = projectModel.getDevelopers().getFirst().getName();
+        }
+        if (prjParentModel != null) {
+            prjFirstDeveloper = prjParentModel.getDevelopers().getFirst().getName();
         }
         return prjFirstDeveloper;
     }
@@ -96,10 +101,12 @@ public final class ProjectClass {
      */
     private static Model getProjectModelFromSystem(final MavenXpp3Reader reader, final String pomReference) {
         Model model = null;
-        try(BufferedReader bReader = Files.newBufferedReader(Path.of(pomReference), StandardCharsets.UTF_8)) {
-            model = reader.read(bReader);
-        } catch (IOException | XmlPullParserException ex) {
-            LogExposureClass.exposeProjectModel(Arrays.toString(ex.getStackTrace()));
+        if (pomReference != null) {
+            try(BufferedReader bReader = Files.newBufferedReader(Path.of(pomReference), StandardCharsets.UTF_8)) {
+                model = reader.read(bReader);
+            } catch (IOException | XmlPullParserException ex) {
+                LogExposureClass.exposeProjectModel(Arrays.toString(ex.getStackTrace()));
+            }
         }
         return model;
     }
@@ -133,6 +140,10 @@ public final class ProjectClass {
                 && rawValue.endsWith("}")) {
             try {
                 finalValue = prjInterpolator.interpolate(rawValue);
+                if (finalValue.startsWith("${")
+                        && finalValue.endsWith("}")) {
+                    finalValue = prjParentInterpolator.interpolate(finalValue);
+                }
             } catch (InterpolationException e) {
                 final String strFeedback = String.format("InterpolationException %s", Arrays.toString(e.getStackTrace()));
                 LogExposureClass.LOGGER.error(strFeedback);
@@ -164,18 +175,16 @@ public final class ProjectClass {
      */
     public static String getProjectVersion(final Model prjModel) {
         String prjVersion = prjModel.getVersion();
-        final String strFeedback = String.format("I picked initial version as %s", prjVersion);
-        LogExposureClass.LOGGER.info(strFeedback);
         if (prjVersion == null) {
             prjVersion = prjModel.getParent().getVersion();
             final String strFeedback2 = String.format("As initial version was NULL I re-picked version from parent and is %s", prjVersion);
-            LogExposureClass.LOGGER.info(strFeedback2);
+            LogExposureClass.LOGGER.debug(strFeedback2);
         }
         if (prjVersion.startsWith("${")
                 && prjVersion.endsWith("}")) {
             prjVersion = getProjectModelValueWithInterpolationIfNeeded(prjVersion);
             final String strFeedback3 = String.format("Final interpolated version is %s", prjVersion);
-            LogExposureClass.LOGGER.info(strFeedback3);
+            LogExposureClass.LOGGER.debug(strFeedback3);
         }
         return prjVersion;
     }
@@ -184,47 +193,28 @@ public final class ProjectClass {
      * Load POM for current project
      */
     public static void loadProjectModel() {
-        setPomFile();
         final MavenXpp3Reader reader = new MavenXpp3Reader();
         if (Files.exists(Path.of(pomFile))) {
             prjModel = getProjectModelFromSystem(reader, pomFile);
+            prjParentModel = getProjectModelFromSystem(reader, pomParentFile);
         } else {
             prjModel = getProjectModelFromInsideJar(reader, pomFile);
+            prjParentModel = getProjectModelFromInsideJar(reader, pomParentFile);
         }
         LoaderSubClass.loadComponents();
     }
 
     /**
-     * Setter for externalPomFile
-     * @param inExtPomFile input external POM file
-     */
-    public static void setExternalPomFile(final String inExtPomFile) {
-        externalPomFile = inExtPomFile;
-    }
-
-    /**
      * set the POM to work with
      */
-    private static void setPomFile() {
-        if (!externalPomFile.isBlank()) {
-            final String strFeedback = String.format("External POM file %s is being considered!", externalPomFile);
+    public static void setPomFile(final String inPomFile) {
+        pomFile = inPomFile;
+        if (inPomFile.startsWith("/tools-")
+                && inPomFile.endsWith("-pom.xml")
+                && !"/tools-pom.xml".equalsIgnoreCase(inPomFile)) {
+            pomParentFile = "/tools-pom.xml";
+            final String strFeedback = String.format("Parrent Project Object Model set %s", pomParentFile);
             LogExposureClass.LOGGER.debug(strFeedback);
-        }
-        if (BasicStructuresClass.isRunningFromJar()) {
-            if (externalPomFile.isBlank()) {
-                pomFile = INTERNAL_POM;
-            } else {
-                pomFile = externalPomFile;
-            }
-        } else {
-            if (externalPomFile.isBlank()) {
-                final StringBuilder sbPom = new StringBuilder(100);
-                final String strPrjFolder = BasicStructuresClass.getCurrentFolder();
-                sbPom.append(strPrjFolder).append(File.separator).append("pom.xml");
-                pomFile = sbPom.toString();
-            } else {
-                pomFile = externalPomFile;
-            }
         }
     }
 
@@ -253,7 +243,7 @@ public final class ProjectClass {
                     .append(':')
                     .append(prjModel.getArtifactId())
                     .append("\":\"")
-                    .append(prjModel.getVersion() == null ? prjModel.getParent().getVersion() : prjModel.getVersion())
+                    .append(getProjectVersion(prjModel))
                     .append('\"');
             final Map<String, Object> projDependencies = ComponentsSubClass.getProjectModelComponent(BasicStructuresClass.STR_DEPENDENCIES);
             if (!projDependencies.isEmpty()) {
@@ -292,7 +282,7 @@ public final class ProjectClass {
             appDetails.put("Application - "
                     + (prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId())
                     + ":" + prjModel.getArtifactId(),
-                    prjModel.getVersion() == null ? prjModel.getParent().getVersion() : prjModel.getVersion());
+                    getProjectVersion(prjModel));
             final Map<String, Object> projDependencies = ComponentsSubClass.getProjectModelComponent(BasicStructuresClass.STR_DEPENDENCIES);
             if (!projDependencies.isEmpty()) {
                 projDependencies.forEach((strKey, objValue) -> appDetails.put("Direct Dependency - " + strKey, objValue));
@@ -328,7 +318,7 @@ public final class ProjectClass {
                 if (!strJsonModule.isEmpty()) {
                     strJsonModule.append(',');
                 }
-                setExternalPomFile(crtModulePom);
+                setPomFile(crtModulePom);
                 loadProjectModel();
                 final Model prjModuleModel = getProjectModel();
                 String mdlVersion = prjModuleModel.getVersion();
@@ -375,7 +365,11 @@ public final class ProjectClass {
          */
         public static void loadComponents() {
             if (prjModel.getProperties() != null) {
-                loadProjectModelInterpolator();
+                prjInterpolator = loadProjectModelInterpolator(prjModel);
+            }
+            if (prjParentModel != null
+                    && prjParentModel.getProperties() != null) {
+                prjParentInterpolator = loadProjectModelInterpolator(prjParentModel);
             }
             if (prjModel.getDependencyManagement() != null) {
                 loadProjectModelCentralDependencies();
@@ -415,11 +409,11 @@ public final class ProjectClass {
         /**
          * Loading Properties for current Project Model if set
          */
-        private static void loadProjectModelInterpolator() {
+        private static StringSearchInterpolator loadProjectModelInterpolator(final Model projectModel) {
             final StringSearchInterpolator interpolator = new StringSearchInterpolator();
-            final Properties props = prjModel.getProperties();
+            final Properties props = projectModel.getProperties();
             interpolator.addValueSource(new MapBasedValueSource(props));
-            prjInterpolator = interpolator;
+            return interpolator;
         }
 
         /**
@@ -475,13 +469,20 @@ public final class ProjectClass {
             final Map<String, Object> mapToReturn = new ConcurrentHashMap<>();
             prjModel.getBuild().getPlugins().forEach(plugin -> {
                 final String strKey = plugin.getGroupId() + ":" + plugin.getArtifactId();
-                String strVersion = getProjectModelValueWithInterpolationIfNeeded(plugin.getVersion());
-                if (strVersion.isEmpty()
-                        && managedVersions != null
-                        && !managedVersions.isEmpty()
-                        && pluginCentralVers != null
-                        && !pluginCentralVers.isEmpty()) {
-                    strVersion = pluginCentralVers.getOrDefault(strKey, UNKNOWN).toString();
+                final String rawVersion = plugin.getVersion();
+                String strVersion = "";
+                if (rawVersion == null) {
+                    final String strVariable = String.format("${%s.version}", plugin.getArtifactId());
+                    strVersion = getProjectModelValueWithInterpolationIfNeeded(strVariable);
+                } else {
+                    strVersion = getProjectModelValueWithInterpolationIfNeeded(rawVersion);
+                    if (strVersion.isEmpty()
+                            && managedVersions != null
+                            && !managedVersions.isEmpty()
+                            && pluginCentralVers != null
+                            && !pluginCentralVers.isEmpty()) {
+                        strVersion = pluginCentralVers.getOrDefault(strKey, UNKNOWN).toString();
+                }
                 }
                 mapToReturn.put(strKey, strVersion);
             });
@@ -496,11 +497,18 @@ public final class ProjectClass {
             final Map<String, Object> mapToReturn = new ConcurrentHashMap<>();
             prjModel.getDependencies().forEach(dependency -> {
                 final String strKey = dependency.getGroupId() + ":" + dependency.getArtifactId();
-                String strVersion = getProjectModelValueWithInterpolationIfNeeded(dependency.getVersion());
-                if (strVersion.isEmpty()
-                        && managedVersions != null
-                        && !managedVersions.isEmpty()) {
-                    strVersion = managedVersions.getOrDefault(strKey, UNKNOWN).toString();
+                final String rawVersion = dependency.getVersion();
+                String strVersion = "";
+                if (rawVersion == null) {
+                    final String strVariable = String.format("${%s.version}", dependency.getArtifactId());
+                    strVersion = getProjectModelValueWithInterpolationIfNeeded(strVariable);
+                } else {
+                    strVersion = getProjectModelValueWithInterpolationIfNeeded(dependency.getVersion());
+                    if (strVersion.isEmpty()
+                            && managedVersions != null
+                            && !managedVersions.isEmpty()) {
+                        strVersion = managedVersions.getOrDefault(strKey, UNKNOWN).toString();
+                    }
                 }
                 mapToReturn.put(strKey, strVersion);
             });
@@ -517,13 +525,20 @@ public final class ProjectClass {
                 if (profile.getBuild() != null) {
                     profile.getBuild().getPlugins().forEach(plugin -> {
                         final String strKey = plugin.getGroupId() + ":" + plugin.getArtifactId();
-                        String strVersion = getProjectModelValueWithInterpolationIfNeeded(plugin.getVersion());
-                        if (strVersion.isEmpty()
-                                && managedVersions != null
-                                && !managedVersions.isEmpty()
-                                && pluginCentralVers != null
-                                && !pluginCentralVers.isEmpty()) {
-                            strVersion = pluginCentralVers.getOrDefault(strKey, UNKNOWN).toString();
+                        final String rawVersion = plugin.getVersion();
+                        String strVersion = "";
+                        if (rawVersion == null) {
+                            final String strVariable = String.format("${%s.version}", plugin.getArtifactId());
+                            strVersion = getProjectModelValueWithInterpolationIfNeeded(strVariable);
+                        } else {
+                            strVersion = getProjectModelValueWithInterpolationIfNeeded(rawVersion);
+                            if (strVersion.isEmpty()
+                                    && managedVersions != null
+                                    && !managedVersions.isEmpty()
+                                    && pluginCentralVers != null
+                                    && !pluginCentralVers.isEmpty()) {
+                                strVersion = pluginCentralVers.getOrDefault(strKey, UNKNOWN).toString();
+                        }
                         }
                         mapToReturn.put(strKey, strVersion);
                     });
