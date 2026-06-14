@@ -1,10 +1,12 @@
-package io.github.danielgp_eu.tools.core;
+package io.github.danielgp_eu.tools.environment;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.github.danielgp_eu.tools.core.BasicStructuresClass;
+import io.github.danielgp_eu.tools.core.JsonOperationsClass;
 import oshi.ffm.SystemInfo;
 import oshi.hardware.Baseboard;
 import oshi.hardware.CentralProcessor;

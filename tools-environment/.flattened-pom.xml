@@ -7,10 +7,10 @@
     <artifactId>tools</artifactId>
     <version>1.0.4</version>
   </parent>
-  <artifactId>tools-utils</artifactId>
+  <artifactId>tools-environment</artifactId>
   <version>1.0.4</version>
-  <name>tools-utils</name>
-  <description>Java wrapper classes to expose included features over command-line</description>
+  <name>tools-environment</name>
+  <description>Java classes to capture execution environment</description>
   <licenses>
     <license>
       <name>Mozilla Public License Version 2.0</name>
@@ -20,6 +20,10 @@
   </licenses>
   <dependencies>
     <dependency>
+      <groupId>com.github.oshi</groupId>
+      <artifactId>oshi-core-ffm</artifactId>
+    </dependency>
+    <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli</artifactId>
     </dependency>
@@ -27,6 +31,10 @@
       <groupId>io.github.danielgp-eu</groupId>
       <artifactId>tools-core</artifactId>
       <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
     </dependency>
   </dependencies>
   <build>
@@ -44,7 +52,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>io.github.danielgp_eu.tools.utils.Application</mainClass>
+              <mainClass>io.github.danielgp_eu.tools.environment.Application</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -60,7 +68,7 @@
             </goals>
             <configuration>
               <target name="copy-and-rename-pom">
-                <copy file="${basedir}/pom.xml" tofile="${project.build.outputDirectory}/tools-utils-pom.xml" />
+                <copy file="${basedir}/pom.xml" tofile="${project.build.outputDirectory}/tools-environment-pom.xml" />
               </target>
             </configuration>
           </execution>

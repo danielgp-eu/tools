@@ -11,12 +11,16 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>tools-databases</artifactId>
-    <name>tools-databases</name>
-    <description>Java classes specialized to interface with various databases</description>
+    <artifactId>tools-environment</artifactId>
+    <name>tools-environment</name>
+    <description>Java classes to capture execution environment</description>
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core-ffm</artifactId>
+        </dependency>
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
@@ -27,8 +31,8 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
         </dependency>
     </dependencies>
 
@@ -48,7 +52,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.github.danielgp_eu.tools.databases.Application</mainClass>
+                            <mainClass>io.github.danielgp_eu.tools.environment.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -66,7 +70,7 @@
                         <configuration>
                             <target name="copy-and-rename-pom">
                                 <copy file="${basedir}/pom.xml"
-                                      tofile="${project.build.outputDirectory}/tools-databases-pom.xml"/>
+                                      tofile="${project.build.outputDirectory}/tools-environment-pom.xml"/>
                             </target>
                         </configuration>
                     </execution>
@@ -94,11 +98,6 @@
                 <extensions>true</extensions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-            </resource>
-        </resources>
     </build>
 
 </project>

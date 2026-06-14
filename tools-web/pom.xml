@@ -30,6 +30,11 @@
             <artifactId>tools-databases</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.danielgp-eu</groupId>
+            <artifactId>tools-environment</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <build>

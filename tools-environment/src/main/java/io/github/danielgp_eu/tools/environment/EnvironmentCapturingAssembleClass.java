@@ -11,7 +11,7 @@
  * You can distribute binaries under a proprietary license,
  *   as long as you make the source available under MPL.
  */
-package io.github.danielgp_eu.tools.core;
+package io.github.danielgp_eu.tools.environment;
 
 import oshi.hardware.*;
 import oshi.software.os.NetworkParams;
@@ -21,6 +21,13 @@ import oshi.util.PlatformEnum;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import io.github.danielgp_eu.tools.core.BasicStructuresClass;
+import io.github.danielgp_eu.tools.core.HtmlClass;
+import io.github.danielgp_eu.tools.core.JsonOperationsClass;
+import io.github.danielgp_eu.tools.core.LogExposureClass;
+import io.github.danielgp_eu.tools.core.ProjectClass;
+import io.github.danielgp_eu.tools.core.ShellingClass;
 
 /**
  * Capturing current environment details

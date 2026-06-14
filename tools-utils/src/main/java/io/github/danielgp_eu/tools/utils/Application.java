@@ -23,7 +23,6 @@ import java.util.Properties;
 
 import io.github.danielgp_eu.tools.core.BasicStructuresClass;
 import io.github.danielgp_eu.tools.core.CommonInteractiveClass;
-import io.github.danielgp_eu.tools.core.EnvironmentCapturingAssembleClass;
 import io.github.danielgp_eu.tools.core.FileOperationsClass;
 import io.github.danielgp_eu.tools.core.LogExposureClass;
 import io.github.danielgp_eu.tools.core.ShellingClass;
@@ -40,7 +39,6 @@ import picocli.CommandLine.Mixin;
             AnalyzeColumnsFromCsvFiles.class,
             CalculateSunriseAndSunset.class,
             CaptureChecksumsOfFilesFromFoldersIntoCsvFile.class,
-            CaptureEnvironmentDetailsIntoJsonFile.class,
             CaptureImportsFromJavaSourceFilesIntoCsvFile.class,
             CaptureWindowsApplicationsInstalledIntoCsvFile.class,
             CleanOlderFilesFromFolder.class,
@@ -48,6 +46,11 @@ import picocli.CommandLine.Mixin;
     }
 )
 public class Application {
+
+    /**
+     * Application logic
+     * @param args input arguments
+     */
     public static void main( String[] args ) {
         CommonInteractiveClass.setStartDateTime();
         CommonInteractiveClass.startMeUp();
@@ -56,6 +59,7 @@ public class Application {
         CommonInteractiveClass.setExitCode(iExitCode);
         CommonInteractiveClass.shutMeDown(args[0]);
     }
+
 }
 
 /**
@@ -234,37 +238,6 @@ class CaptureChecksumsOfFilesFromFoldersIntoCsvFile implements Runnable {
     protected CaptureChecksumsOfFilesFromFoldersIntoCsvFile() {
         super();
     }
-}
-
-/**
- * Captures execution environment details into Log file
- */
-@CommandLine.Command(name = "CaptureEnvironmentDetailsIntoJsonFile",
-                     description = "Captures execution environment details into Log file")
-class CaptureEnvironmentDetailsIntoJsonFile implements Runnable {
-    /**
-     * adds the options defined in 
-     * CommonInteractiveClass.OutFileNameOptionMixinClass to this command
-     */
-    @Mixin
-    private final CommonInteractiveClass.OutFileNameOptionMixinClass optionOut = new CommonInteractiveClass.OutFileNameOptionMixinClass();
-
-    @Override
-    public void run() {
-        final String strEnvDetails = EnvironmentCapturingAssembleClass.packageCurrentEnvironmentDetailsIntoJson();
-        final String strOutFileName = optionOut.getOutFileName();
-        final String strFeedback = String.format("Environment details are %s and will intend to write it to %s file", strEnvDetails, strOutFileName);
-        LogExposureClass.LOGGER.info(strFeedback);
-        FileOperationsClass.ContentWritingSubClass.writeRawTextToFile(strOutFileName, strEnvDetails);
-    }
-
-    /**
-     * Private constructor to prevent instantiation
-     */
-    protected CaptureEnvironmentDetailsIntoJsonFile() {
-        super();
-    }
-
 }
 
 /**

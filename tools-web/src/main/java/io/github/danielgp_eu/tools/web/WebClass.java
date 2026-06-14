@@ -17,6 +17,7 @@ import gg.jte.TemplateEngine;
 import gg.jte.output.Utf8ByteOutput;
 import io.github.danielgp_eu.tools.core.*;
 import io.github.danielgp_eu.tools.databases.DatabaseOperationsClass;
+import io.github.danielgp_eu.tools.environment.EnvironmentCapturingAssembleClass;
 import io.undertow.server.HttpHandler;
 
 import java.nio.file.Path;

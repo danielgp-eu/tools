@@ -5,10 +5,10 @@
   <parent>
     <groupId>io.github.danielgp-eu</groupId>
     <artifactId>tools</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
   </parent>
   <artifactId>tools-databases</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <name>tools-databases</name>
   <description>Java classes specialized to interface with various databases</description>
   <licenses>
@@ -34,6 +34,11 @@
     </dependency>
   </dependencies>
   <build>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
