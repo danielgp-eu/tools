@@ -27,7 +27,7 @@ public class Application {
      *
      * @param args command-line arguments
      */
-    public static void main( String[] args ) {
+    /* default */ static void main(final String... args) {
         CommonInteractiveClass.setStartDateTime();
         ProjectClass.setPomFile("/tools-databases-pom.xml");
         CommonInteractiveClass.startMeUp();

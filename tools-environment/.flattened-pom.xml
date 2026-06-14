@@ -5,10 +5,10 @@
   <parent>
     <groupId>io.github.danielgp-eu</groupId>
     <artifactId>tools</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
   </parent>
   <artifactId>tools-environment</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.0.5</version>
   <name>tools-environment</name>
   <description>Java classes to capture execution environment</description>
   <licenses>
