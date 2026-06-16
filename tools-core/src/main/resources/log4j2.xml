@@ -2,7 +2,7 @@
 <Configuration status="info">
     <Properties>
         <Property name="APP_LOG_ROOT">logs</Property>
-        <Property name="FILE_NAME_PREFIX">org_danielgp_eu__tools-</Property>
+        <Property name="FILE_NAME_PREFIX">danielgp_eu__tools-</Property>
         <Property name="FILE_PATTERN_SUFFIX">%d{yyyy-MM-dd-HH}-%i</Property>
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} [%-6p] %C{3}.%M(%F:%L) - %m%n</Property>
     </Properties>
