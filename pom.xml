@@ -54,7 +54,7 @@
     </modules>
 
     <properties>
-        <revision>1.0.5</revision>
+        <revision>1.0.6-SNAPSHOT</revision>
         <!-- File encoding properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -69,6 +69,7 @@
         <jspecify.version>1.0.0</jspecify.version>
         <junit-jupiter.version>6.1.0</junit-jupiter.version>
         <jte.version>3.2.4</jte.version>
+        <log4j-core.version>2.26.0</log4j-core.version>
         <log4j-slf4j2-impl.version>2.26.0</log4j-slf4j2-impl.version>
         <maven-model.version>3.9.16</maven-model.version>
         <oshi-core-ffm.version>7.3.1</oshi-core-ffm.version>
@@ -127,6 +128,15 @@
                 <groupId>io.undertow</groupId>
                 <artifactId>undertow-core</artifactId>
                 <version>${undertow-core.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <!-- Source: https://logging.apache.org/log4j/2.x/ -->
+            <!-- Binaries: https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core -->
+            <!-- Description: Implementation for Apache Log4J, a highly configurable logging tool that focuses on performance and low garbage generation. It has a plugin architecture that makes it extensible and supports asynchronous logging based on LMAX Disruptor. -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j-core.version}</version>
                 <scope>compile</scope>
             </dependency>
             <!-- Source: https://logging.apache.org/log4j/2.x/ -->

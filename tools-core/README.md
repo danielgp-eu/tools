@@ -106,6 +106,7 @@ Various Java classes to be re-used
 * [Log4j Common Conversion Patterns Example](https://www.codejava.net/coding/common-conversion-patterns-for-log4js-patternlayout)
 * [Log4j2 – Useful Log Format Pattern Layouts](https://howtodoinjava.com/log4j2/useful-conversion-pattern-examples/)
 * [Log4j2 XML Configuration: Log4j2.xml Example](https://howtodoinjava.com/log4j2/log4j2-xml-configuration-example/)
+* [Programmatic Configuration with Log4j 2](https://www.baeldung.com/log4j2-programmatic-config)
 
 
 ### Java Security
@@ -142,6 +143,8 @@ Various Java classes to be re-used
 ## Project Management
 
 * [Apache Maven Project](https://maven.apache.org/)
+* [Multi-Module Project with Maven](https://medium.com/@khileshsahu2007/maven-multi-module-project-guide-structure-examples-real-world-challenges-d867ff22a0a8)
+* [Maven Multi-Module Project Guide: Structure, Examples & Real-World Challenges](https://medium.com/@khileshsahu2007/maven-multi-module-project-guide-structure-examples-real-world-challenges-d867ff22a0a8)
 
 
 ## Snowflake with Java
