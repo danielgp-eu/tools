@@ -4,10 +4,11 @@
 package io.github.danielgp_eu.tools.core;
 
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
 import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.builder.api.AppenderComponentBuilder;
 import org.apache.logging.log4j.core.config.builder.api.ComponentBuilder;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
@@ -20,10 +21,8 @@ import org.apache.logging.log4j.core.config.builder.api.RootLoggerComponentBuild
  * exposing things to Log
  */
 public final class LogExposureClass {
-    /** Process Capture Need variable  */
-    /* default */ private static boolean needProcExposure = true;
     /** Logger variable */
-    public static final Logger LOGGER = LogManager.getLogger(LogExposureClass.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(LogExposureClass.class);
     /** standard Unknown feature constant */
     public static final String STR_I18N_UNKN_FTS = "Feature %s is NOT known in %s...";
     /** standard Unknown constant */
@@ -60,10 +59,8 @@ public final class LogExposureClass {
      * @param strCommand command to execute
      */
     public static void exposeProcessBuilder(final String strCommand) {
-        if (getLogLevel().isLessSpecificThan(Level.INFO) && needProcExposure) {
-            final String strFeedback = String.format("I intend to execute following shell command %s", strCommand);
-            LOGGER.debug(strFeedback);
-        } 
+        final String strFeedback = String.format("I intend to execute following shell command %s", strCommand);
+        LOGGER.debug(strFeedback);
     }
 
     /**
@@ -102,14 +99,6 @@ public final class LogExposureClass {
     }
 
     /**
-     * Getter current Log Level
-     * @return current Log Level
-     */
-    public static Level getLogLevel() {
-        return LOGGER.getLevel();
-    }
-
-    /**
      * get Unsupported Feature
      * @param strDecision decision evaluated
      * @param strWhere which function this is called from
@@ -122,62 +111,68 @@ public final class LogExposureClass {
     }
 
     /**
-     * Setter for Process Exposure
-     * @param inProcExposure true or false for exposing process parameters to Log
-     */
-    public static void setProcessExposureNeed(final boolean inProcExposure) {
-        needProcExposure = inProcExposure;
-    }
-
-    /**
      * Configuration management
      * see https://www.baeldung.com/log4j2-programmatic-config
      * and https://github.com/apache/logging-log4j2/blob/2.x/log4j-core/src/main/resources/Log4j-levels.xsd
      */
     public static final class ConfigurationSubClass {
         /** Log builder */
-        private static final ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
+        private static final ConfigurationBuilder<BuiltConfiguration> BUILDER = ConfigurationBuilderFactory.newConfigurationBuilder();
         /** PatternLayout variable */
-        private static LayoutComponentBuilder patternLayout;
+        private static final LayoutComponentBuilder PATTERN_LAYOUT = BUILDER.newLayout("PatternLayout").addAttribute("pattern", "%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} [%-6p] %C{3}.%M(%F:%L) - %m%n");
+        /** default Log Level */
+        /*/ default */ private static Level logLevel = Level.INFO;
+        /** default Log location and base-namel */
+        /*/ default */ private static String logFile = "log/DanielGP-EU_Tools-";
 
         // Private constructor to prevent instantiation
         private ConfigurationSubClass() {
             // intentionally blank
         }
 
-        public static void setLogLevelToParentAndChild(final Level inputLevel, final String fileLogName) {
-            patternLayout = buildPatternLayout(builder);
-            final AppenderComponentBuilder console = builder
-                    .newAppender("stdout", "Console")
-                    .add(patternLayout);
-            builder.add(console);
-            buildRollingFile(fileLogName, "rest");
-            buildRollingFile(fileLogName, "error");
-            final RootLoggerComponentBuilder rootLogger = builder
-                    .newRootLogger(inputLevel)
-                    .add(builder.newAppenderRef("rollingRest"))
-                    .add(builder.newAppenderRef("rollingError"))
+        /**
+         * Initiate Log
+         */
+        public static void initiate() {
+            buildRollingFile("rest");
+            buildRollingFile("error");
+            final RootLoggerComponentBuilder rootLogger = BUILDER
+                    .newRootLogger(logLevel)
+                    .add(BUILDER.newAppenderRef("rollingRest"))
+                    .add(BUILDER.newAppenderRef("rollingError"))
                     .addAttribute("additivity", false);
-            builder.add(rootLogger);
+            BUILDER.add(rootLogger);
+            Configurator.initialize(BUILDER.build());
         }
 
-        private static void buildRollingFile(final String pathFileBaseName, final String strType) {
-            final String logFileName = pathFileBaseName + strType + ".log";
+        private static void buildRollingFile(final String strType) {
+            final String logFileName = logFile + strType + ".log";
             final String filePattern = logFileName.replace(".log", "%d{yyyy-MM-dd-HH}-%i.log");
-            final ComponentBuilder<?> policy = buildPolicies(builder);
-            final FilterComponentBuilder levelRangeFilter = switch ( strType ) {
-                case "error" -> buildLevelRangeFilter(builder, "FATAL", "ERROR");
-                case "rest"  -> buildLevelRangeFilter(builder, "WARN", "ALL");
-                default      -> buildLevelRangeFilter(builder, "FATAL", "ALL"); // includes all levels
-            };
-            final AppenderComponentBuilder rollingFile  = builder
-                    .newAppender("rollingRest", "RollingFile")
+            final ComponentBuilder<?> policy = buildPolicies(BUILDER);
+            final String rollingName;
+            final FilterComponentBuilder levelRangeFilter;
+            switch(strType) {
+                case "error":
+                    rollingName = "rollingError";
+                    levelRangeFilter = buildLevelRangeFilter(BUILDER, "FATAL", "ERROR");
+                    break;
+                case "rest":
+                    rollingName = "rollingRest";
+                    levelRangeFilter = buildLevelRangeFilter(BUILDER, "WARN", "ALL");
+                    break;
+                default:
+                    rollingName = "rollingAll";
+                    levelRangeFilter = buildLevelRangeFilter(BUILDER, "FATAL", "ALL"); // includes all levels
+                    break;
+            }
+            final AppenderComponentBuilder rollingFile  = BUILDER
+                    .newAppender(rollingName, "RollingFile")
                     .addAttribute("fileName", logFileName)
                     .addAttribute("filePattern", filePattern)
-                    .add(patternLayout)
+                    .add(PATTERN_LAYOUT)
                     .addComponent(policy)
                     .add(levelRangeFilter);
-            builder.add(rollingFile);
+            BUILDER.add(rollingFile);
         }
 
         /**
@@ -192,18 +187,6 @@ public final class LogExposureClass {
             flow.addAttribute("minLevel", minLevel);
             flow.addAttribute("maxLevel", maxLevel);
             return flow;
-        }
-
-        /**
-         * Building Pattern Layout
-         * @param builder input logger
-         * @return standard
-         */
-        private static LayoutComponentBuilder buildPatternLayout(final ConfigurationBuilder<BuiltConfiguration> builder) {
-            final String logPattern = "%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} [%-6p] %C{3}.%M(%F:%L) - %m%n";
-            final LayoutComponentBuilder standard = builder.newLayout("PatternLayout");
-            standard.addAttribute("PatternLayout", logPattern);
-            return standard;
         }
 
         /**
@@ -223,6 +206,22 @@ public final class LogExposureClass {
                     .addAttribute("size", "20M");
             triggeringPolicy.addComponent(sizeBasedPolicy);
             return triggeringPolicy;
+        }
+
+        /**
+         * Setter for logFile
+         * @param inputFile desired location and file base-name
+         */
+        public static void setLogFile(final String inputFile) {
+            logFile = inputFile;
+        }
+
+        /**
+         * Setter for logLevel
+         * @param inputLevel desired Level
+         */
+        public static void setLogLevel(final Level inputLevel) {
+            logLevel = inputLevel;
         }
 
     }

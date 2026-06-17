@@ -678,6 +678,20 @@ public final class BasicStructuresClass {
             return RegularExpressionsClass.ValidationSubClass.isStringActuallySomething(inputString, "version");
         }
 
+        /**
+         * check if string follows a pattern
+         * @param inString input String
+         * @return true/false
+         */
+        public static boolean isStringOneVariable(final String inString) {
+            boolean bolReturn = false;
+            if (inString.startsWith("${")
+                    && inString.endsWith("}")) {
+                bolReturn = true;
+            }
+            return bolReturn;
+        }
+
         // Private constructor to prevent instantiation
         private StringEvaluationSubClass() {
             // intentionally blank

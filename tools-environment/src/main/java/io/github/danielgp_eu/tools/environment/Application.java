@@ -1,8 +1,11 @@
 package io.github.danielgp_eu.tools.environment;
 
+import org.apache.logging.log4j.Level;
+
 import io.github.danielgp_eu.tools.core.CommonInteractiveClass;
 import io.github.danielgp_eu.tools.core.FileOperationsClass;
 import io.github.danielgp_eu.tools.core.LogExposureClass;
+import io.github.danielgp_eu.tools.core.ProjectClass;
 import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
 
@@ -23,6 +26,10 @@ public class Application {
      */
     public static void main( String[] args ) {
         CommonInteractiveClass.setStartDateTime();
+        LogExposureClass.ConfigurationSubClass.setLogLevel(Level.INFO);
+        LogExposureClass.ConfigurationSubClass.setLogFile("logs/DanielGP_Tools-Environment-");
+        LogExposureClass.ConfigurationSubClass.initiate();
+        ProjectClass.setPomFile("/tools-environment-pom.xml");
         CommonInteractiveClass.startMeUp();
         // execute appropriate Command with provided arguments
         final int iExitCode = new CommandLine(new Application()).execute(args);

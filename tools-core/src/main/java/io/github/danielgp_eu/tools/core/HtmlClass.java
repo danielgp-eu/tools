@@ -38,7 +38,7 @@ public final class HtmlClass {
      */
     public static String buildApplicationDetail() {
         final Model prjModel = ProjectClass.getProjectModel();
-        final String prjVersion = ProjectClass.getProjectVersion(prjModel);
+        final String prjVersion = ProjectClass.getProjectVersion();
         final String prjFirstDeveloper = ProjectClass.getFirstDeveloper(prjModel);
         return String.format("%s&trade; v.%s &copy; by %s", prjModel.getName(), prjVersion, prjFirstDeveloper);
     }
@@ -58,21 +58,22 @@ public final class HtmlClass {
      */
     public static String buildFileInfoBox(final Path fileName) {
         final String strThousandSep = "%,d";
-        final String[] infoStrings = {
-               String.format(STRING_IMPORTANT, fileName),
-               String.format(STRING_IMPORTANT, String.format(Locale.US, strThousandSep, fileName.toFile().length())),
-               String.format(STRING_IMPORTANT, TimingClass.getFileLastModifiedTimeAsHumanReadableFormat(fileName)),
-               String.format(STRING_IMPORTANT.replace(";\"", ";font-size:0.7rem;\""), FileOperationsClass.StatisticsSubClass.computeSingleChecksum(fileName, "SHA-256"))
-        };
-        if (!Files.exists(fileName)) {
-            final String strFeedback = String.format("Given file %s was not found on disk and statistics for it are %s, hence will be looking for it within JAR", fileName, Arrays.toString(infoStrings));
+        String fileSize = "unknown size";
+        String fileModified = "unknown modified timestamp";
+        String fileChecksum = "unknown SHA-256 checksum";
+        if (Files.exists(fileName)) {
+            fileSize = String.format(Locale.US, strThousandSep, fileName.toFile().length());
+            fileModified = TimingClass.getFileLastModifiedTimeAsHumanReadableFormat(fileName);
+            fileChecksum = FileOperationsClass.StatisticsSubClass.computeSingleChecksum(fileName, "SHA-256");
+        } else {
+            final String strFeedback = String.format("Given file %s was not found on disk, hence will be looking for it within JAR", fileName);
             LogExposureClass.LOGGER.debug(strFeedback);
             final String internalFile = fileName.toString().replace("\\", "/");
             try (InputStream inStream = HtmlClass.class.getResourceAsStream(internalFile)) {
                 final String strFeedback2 = String.format("Input Stream is: %s", inStream);
                 LogExposureClass.LOGGER.debug(strFeedback2);
                 assert inStream != null;
-                infoStrings[1] = String.format(STRING_IMPORTANT, String.format(Locale.US, strThousandSep, inStream.transferTo(OutputStream.nullOutputStream())));
+                fileSize = String.format(Locale.US, strThousandSep, inStream.transferTo(OutputStream.nullOutputStream()));
                 final URL resourceUrl = HtmlClass.class.getResource(internalFile);
                 final String strFeedback3 = String.format("URI is: %s", resourceUrl);
                 LogExposureClass.LOGGER.debug(strFeedback3);
@@ -84,7 +85,8 @@ public final class HtmlClass {
                     strInOut[0] = "yyyy-MM-dd HH:mm:ss.SSS";
                     strInOut[1] = "EEE, dd MMM yyyy HH:mm:ss.SSS";
                 }
-                infoStrings[2] = String.format(STRING_IMPORTANT, TimingClass.LocalizationSubClass.convertTimestampFriendly(strLastModified, strInOut[0], strInOut[1]));
+                fileModified = String.format(STRING_IMPORTANT, TimingClass.LocalizationSubClass.convertTimestampFriendly(strLastModified, strInOut[0], strInOut[1]));
+                fileChecksum = FileOperationsClass.StatisticsSubClass.computeSingleChecksumFromInputStream(inStream, "SHA-256");
             } catch (IOException ex) {
                 LogExposureClass.exposeProjectModel(Arrays.toString(ex.getStackTrace()));
             }
@@ -94,7 +96,11 @@ public final class HtmlClass {
     File is %s, having as size of %s bytes, last modified time-stamp on %s with a checksum SHA-256 value of %s
 </div>
 """;
-        return String.format(strTemplate, infoStrings[0], infoStrings[1], infoStrings[2], infoStrings[3]);
+        return String.format(strTemplate,
+                buildStringImportant(fileName.toString()),
+                buildStringImportant(fileSize),
+                buildStringImportant(fileModified),
+                String.format(STRING_IMPORTANT.replace(";\"", ";font-size:0.7rem;\""), fileChecksum));
     }
 
     /**
@@ -109,6 +115,15 @@ public final class HtmlClass {
             }
         });
         return strMenuContent.toString();
+    }
+
+    /**
+     * Build String important
+     * @param inputString given String
+     * @return formatted String
+     */
+    private static String buildStringImportant(final String inputString) {
+        return String.format(STRING_IMPORTANT, inputString);
     }
 
     /**

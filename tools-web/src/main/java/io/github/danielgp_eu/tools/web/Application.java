@@ -3,6 +3,7 @@
  */
 package io.github.danielgp_eu.tools.web;
 
+import org.apache.logging.log4j.Level;
 
 import io.github.danielgp_eu.tools.core.*;
 import io.github.danielgp_eu.tools.databases.DatabaseOperationsClass;
@@ -27,6 +28,9 @@ public class Application {
      */
     /* default */ static void main(final String... args) {
         CommonInteractiveClass.setStartDateTime();
+        LogExposureClass.ConfigurationSubClass.setLogLevel(Level.INFO);
+        LogExposureClass.ConfigurationSubClass.setLogFile("logs/DanielGP_Tools-Web-");
+        LogExposureClass.ConfigurationSubClass.initiate();
         ProjectClass.setPomFile("/tools-web-pom.xml");
         CommonInteractiveClass.startMeUp();
         // execute appropriate Command with provided arguments

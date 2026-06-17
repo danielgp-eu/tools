@@ -16,6 +16,8 @@ package io.github.danielgp_eu.tools.incubator;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.apache.logging.log4j.Level;
+
 import io.github.danielgp_eu.tools.core.*;
 import picocli.CommandLine;
 import picocli.CommandLine.Mixin;
@@ -34,6 +36,9 @@ public class Application
 {
     public static void main( String[] args ) {
         CommonInteractiveClass.setStartDateTime();
+        LogExposureClass.ConfigurationSubClass.setLogLevel(Level.DEBUG);
+        LogExposureClass.ConfigurationSubClass.setLogFile("logs/DanielGP_Tools-Incubator-");
+        LogExposureClass.ConfigurationSubClass.initiate();
         ProjectClass.setPomFile("/tools-incubator-pom.xml");
         CommonInteractiveClass.startMeUp();
         // execute appropriate Command with provided arguments

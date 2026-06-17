@@ -19,6 +19,8 @@ import picocli.CommandLine.Mixin;
 
 import java.util.Properties;
 
+import org.apache.logging.log4j.Level;
+
 /**
  * Main Command Line
  */
@@ -43,6 +45,9 @@ public final class Application {
      */
     static void main( final String[] args ) {
         CommonInteractiveClass.setStartDateTime();
+        LogExposureClass.ConfigurationSubClass.setLogLevel(Level.INFO);
+        LogExposureClass.ConfigurationSubClass.setLogFile("logs/DanielGP_Tools-Archiving-");
+        LogExposureClass.ConfigurationSubClass.initiate();
         ProjectClass.setPomFile("/tools-archiving-pom.xml");
         CommonInteractiveClass.startMeUp();
         // execute appropriate Command with provided arguments

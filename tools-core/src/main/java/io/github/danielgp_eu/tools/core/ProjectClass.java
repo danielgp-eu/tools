@@ -42,13 +42,15 @@ public final class ProjectClass {
     /** current Project Model Interpolator */
     private static StringSearchInterpolator prjInterpolator;
     /** current Project Model Interpolator */
-    private static StringSearchInterpolator prjParentInterpolator;
+    private static StringSearchInterpolator prjParentInterpol;
     /** current Project Model */
     private static Model prjModel;
     /** current Project Parent Model */
     private static Model prjParentModel;
     /** current Project GroupId */
     private static String prjGroupId;
+    /** current Project Version */
+    private static String prjVersion;
     /** current Project GroupId Artifact and Version */
     private static String grpArtifactVers;
 
@@ -76,6 +78,18 @@ public final class ProjectClass {
      */
     public static String getPomFile() {
         return pomFile;
+    }
+
+    /**
+     * Getter for projectGroupId
+     * @return String with groupId
+     */
+    public static String getProjectGroupId() {
+        if (prjGroupId == null) {
+            final Model projectModel = getProjectModel();
+            prjGroupId = projectModel.getGroupId() == null ? projectModel.getParent().getGroupId() : projectModel.getGroupId();
+        }
+        return prjGroupId;
     }
 
     /**
@@ -122,11 +136,11 @@ public final class ProjectClass {
         String finalValue = rawValue;
         if (rawValue == null || rawValue.isBlank()) {
             finalValue = "";
-        } else if (isStringOneVariable(rawValue)) {
+        } else if (BasicStructuresClass.StringEvaluationSubClass.isStringOneVariable(rawValue)) {
             try {
                 finalValue = prjInterpolator.interpolate(rawValue);
-                if (isStringOneVariable(finalValue)) {
-                    finalValue = prjParentInterpolator.interpolate(finalValue);
+                if (BasicStructuresClass.StringEvaluationSubClass.isStringOneVariable(finalValue)) {
+                    finalValue = prjParentInterpol.interpolate(finalValue);
                 }
             } catch (InterpolationException e) {
                 final String strFeedback = String.format("InterpolationException %s", Arrays.toString(e.getStackTrace()));
@@ -154,36 +168,33 @@ public final class ProjectClass {
 
     /**
      * Exposes project version
-     * @param prjModel input Project Model
      * @return String with version
      */
-    public static String getProjectVersion(final Model prjModel) {
-        String prjVersion = prjModel.getVersion();
+    public static String getProjectVersion() {
         if (prjVersion == null) {
-            prjVersion = prjModel.getParent().getVersion();
-            final String strFeedback2 = String.format("As initial version was NULL I re-picked version from parent and is %s", prjVersion);
-            LogExposureClass.LOGGER.debug(strFeedback2);
-        }
-        if (isStringOneVariable(prjVersion)) {
-            prjVersion = getProjectModelValueWithInterpolationIfNeeded(prjVersion);
-            final String strFeedback3 = String.format("Final interpolated version is %s", prjVersion);
-            LogExposureClass.LOGGER.debug(strFeedback3);
+            prjVersion = getProjectVersion(getProjectModel());
         }
         return prjVersion;
     }
 
     /**
-     * check if string follows a pattern
-     * @param inString input String
-     * @return true/false
+     * Exposes project version
+     * @param inProjectModel input Project Model
+     * @return String with version
      */
-    private static boolean isStringOneVariable(final String inString) {
-        boolean bolReturn = false;
-        if (inString.startsWith("${")
-                && inString.endsWith("}")) {
-            bolReturn = true;
+    public static String getProjectVersion(final Model inProjectModel) {
+        String projectVersion = inProjectModel.getVersion();
+        if (projectVersion == null) {
+            projectVersion = inProjectModel.getParent().getVersion();
+            final String strFeedback2 = String.format("As initial version was NULL I re-picked version from parent and is %s", projectVersion);
+            LogExposureClass.LOGGER.debug(strFeedback2);
         }
-        return bolReturn;
+        if (BasicStructuresClass.StringEvaluationSubClass.isStringOneVariable(projectVersion)) {
+            projectVersion = getProjectModelValueWithInterpolationIfNeeded(projectVersion);
+            final String strFeedback3 = String.format("Final interpolated version is %s", projectVersion);
+            LogExposureClass.LOGGER.debug(strFeedback3);
+        }
+        return projectVersion;
     }
 
     /**
@@ -195,8 +206,8 @@ public final class ProjectClass {
         prjParentModel = getProjectModelContent(reader, pomParentFile);
         prjGroupId = prjModel.getGroupId() == null ? prjModel.getParent().getGroupId() : prjModel.getGroupId();
         LoaderSubClass.loadComponents();
-        final String prjVersion = getProjectVersion(prjModel);
-        grpArtifactVers = String.format("\"%s:%s\":\"%s\"", prjGroupId, prjModel.getArtifactId(), prjVersion);
+        final String projectVersion = getProjectVersion();
+        grpArtifactVers = String.format("\"%s:%s\":\"%s\"", prjGroupId, prjModel.getArtifactId(), projectVersion);
     }
 
     /**
@@ -272,7 +283,7 @@ public final class ProjectClass {
             appDetails.put("Application - "
                     + prjGroupId
                     + ":" + prjModel.getArtifactId(),
-                    getProjectVersion(prjModel));
+                    getProjectVersion());
             final Map<String, Object> projDependencies = ComponentsSubClass.getProjectModelComponent(BasicStructuresClass.STR_DEPENDENCIES);
             if (!projDependencies.isEmpty()) {
                 projDependencies.forEach((strKey, objValue) -> appDetails.put("Direct Dependency - " + strKey, objValue));
@@ -348,7 +359,7 @@ public final class ProjectClass {
             }
             if (prjParentModel != null
                     && prjParentModel.getProperties() != null) {
-                prjParentInterpolator = loadProjectModelInterpolator(prjParentModel);
+                prjParentInterpol = loadProjectModelInterpolator(prjParentModel);
             }
             if (prjModel.getDependencyManagement() != null) {
                 loadProjectModelCentralDependencies();
@@ -481,7 +492,7 @@ public final class ProjectClass {
 
         private static String[] getPluginKeyAndVersion(final Plugin inPlugin) {
             final String strKey = inPlugin.getGroupId() + ":" + inPlugin.getArtifactId();
-            String[] strReturn = {strKey, ""};
+            final String[] strReturn = {strKey, ""};
             final String rawVersion = inPlugin.getVersion();
             if (rawVersion == null) {
                 final String strVariable = String.format(variablePattern, inPlugin.getArtifactId());
