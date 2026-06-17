@@ -7,6 +7,9 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -920,32 +923,60 @@ public final class FileOperationsClass {
         }
 
         /**
+         * Compute Digest for checksum Algorithm
+         * @param algorithm input value
+         * @return Digest
+         */
+        private static MessageDigest computeDigestForAlgorithm(final String algorithm) {
+            MessageDigest digest = null;
+            try {
+                digest = MessageDigest.getInstance(algorithm);
+            } catch (NoSuchAlgorithmException e) {
+                final String strFeedbackErr = String.format("Checksum algorithm %s is not available.... %s", algorithm, Arrays.toString(e.getStackTrace()));
+                LogExposureClass.LOGGER.error(strFeedbackErr);
+            }
+            return digest;
+        }
+
+        /**
          * Compute checksum for a given file
          * @param file input file
          * @param algorithm checksum algorithm name
          * @return String
          */
         public static String computeSingleChecksum(final Path file, final String algorithm) {
-            java.security.MessageDigest digest = null;
-            try {
-                digest = java.security.MessageDigest.getInstance(algorithm);
-            } catch (java.security.NoSuchAlgorithmException e) {
-                final String strFeedbackErr = String.format("Checksum algorithm %s is not available.... %s", algorithm, Arrays.toString(e.getStackTrace()));
+            String sbChecksumValue = "checksum not computed";
+            try (InputStream istrmFile = Files.newInputStream(file)) {
+                sbChecksumValue = computeSingleChecksumFromInputStream(istrmFile, algorithm);
+            } catch (IOException e) {
+                final String strFeedbackErr = String.format("Error when attempting to get content from file \"%s\": " +
+                                "%s", file, Arrays.toString(e.getStackTrace()));
                 LogExposureClass.LOGGER.error(strFeedbackErr);
             }
+            return sbChecksumValue;
+        }
+
+        /**
+         * Compute Checksum from Input Stream
+         * @param inStream input stream
+         * @param algorithm algorithm to use for checksum calculation
+         * @return Checksum value
+         */
+        public static String computeSingleChecksumFromInputStream(final InputStream inStream, final String algorithm) {
+            final MessageDigest digest = computeDigestForAlgorithm(algorithm);
             final StringBuilder sbChecksumValue = new StringBuilder();
-            try (InputStream istrmFile = Files.newInputStream(file);
-                    java.security.DigestInputStream dis = new java.security.DigestInputStream(istrmFile, digest)) {
+            try (DigestInputStream dis = new DigestInputStream(inStream, digest)) {
                 // Read and discard all data while updating the digest
                 dis.transferTo(OutputStream.nullOutputStream());
+                assert digest != null;
+                final byte[] hashBytes = digest.digest();
+                for (final byte byteVar : hashBytes) {
+                    sbChecksumValue.append(String.format("%02x", byteVar));
+                }
             } catch (IOException e) {
-                final String strFeedbackErr = String.format("Error when attempting to get content of file \"%s\": %s", "*", Arrays.toString(e.getStackTrace()));
+                final String strFeedbackErr = String.format("Error when attempting to get content from input stream " +
+                        "\"%s\": %s", "*", Arrays.toString(e.getStackTrace()));
                 LogExposureClass.LOGGER.error(strFeedbackErr);
-            }
-            assert digest != null;
-            final byte[] hashBytes = digest.digest();
-            for (final byte byteVar : hashBytes) {
-                sbChecksumValue.append(String.format("%02x", byteVar));
             }
             return sbChecksumValue.toString();
         }
