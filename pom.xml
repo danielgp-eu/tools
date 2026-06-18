@@ -78,7 +78,7 @@
         <sqlite-jdbc.version>3.53.2.0</sqlite-jdbc.version>
         <undertow-core.version>2.4.1.Final</undertow-core.version>
         <!-- Build Plugin versions -->
-        <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
         <dependency-check-maven.version>12.2.2</dependency-check-maven.version>
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
